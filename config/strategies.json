@@ -1,0 +1,44 @@
+{
+  "_說明": "所有篩選門檻都在這裡調整，改完存檔、下次排程就會套用。成交量單位一律為「張」。",
+
+  "common": {
+    "min_avg_volume_20d": 1000,
+    "_min_avg_volume_20d": "近 20 日平均成交量下限（張），排除冷門股"
+  },
+
+  "value": {
+    "enabled": true,
+    "label": "價值型",
+    "pe_max": 15,
+    "yield_min": 5,
+    "pb_max": 1.5,
+    "_說明": "本益比 > 0 且 < pe_max、殖利率(%) > yield_min、股價淨值比 < pb_max"
+  },
+
+  "momentum": {
+    "enabled": true,
+    "label": "動能型",
+    "ma_days": 20,
+    "volume_ratio_min": 1.5,
+    "volume_ratio_base_days": 5,
+    "inst_streak_min": 3,
+    "_說明": "收盤 > 20 日均線、20 日均線較前一日上揚、當日量 ≥ 前 5 日均量 × 1.5、外資或投信連續買超 ≥ 3 日"
+  },
+
+  "growth": {
+    "enabled": true,
+    "label": "成長型",
+    "revenue_yoy_min": 20,
+    "revenue_positive_months": 3,
+    "ma_days": 60,
+    "_說明": "最近一期月營收年增 > 20%、連續 3 個月年增為正、收盤 > 60 日均線。需要 FinMind token（GitHub Secret: FINMIND_TOKEN），未設定時儀表板會顯示「尚未啟用」"
+  },
+
+  "history": {
+    "price_days": 130,
+    "inst_days": 30,
+    "backfill_price_days": 70,
+    "backfill_inst_days": 10,
+    "_說明": "保留的歷史交易日數；第一次執行會自動往回補 backfill_* 天"
+  }
+}
