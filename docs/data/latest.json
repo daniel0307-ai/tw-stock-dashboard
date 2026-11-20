@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-20 18:28",
+ "generated_at": "2026-11-20 20:21",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -47,10 +47,10 @@
   "taiex_change": -2393.6,
   "taiex_change_pct": -6.23,
   "value": 935310420150.0,
-  "inst_foreign": -9413073072.0,
-  "inst_trust": -8749306916.0,
-  "inst_dealer": -34083765608.0,
-  "inst_total": -52246145596.0
+  "inst_foreign": -9510543572.0,
+  "inst_trust": -7346992003.0,
+  "inst_dealer": -34083240120.0,
+  "inst_total": -50940775695.0
  },
  "market_history": [
   {
@@ -305,7 +305,7 @@
    "ma20_dist": -12.13,
    "ma60_dist": -16.47,
    "foreign5": -59022.76,
-   "trust5": 1085.68,
+   "trust5": 1085.99,
    "pe": 20.36,
    "yield": 1.1,
    "pb": 7.41,
