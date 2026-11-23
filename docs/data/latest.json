@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-23 09:29",
+ "generated_at": "2026-11-23 10:01",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -368,6 +368,7 @@
   {
    "code": "2330",
    "name": "台積電",
+   "group": "",
    "note": "",
    "status": "ok",
    "close": 2000.0,
@@ -391,6 +392,7 @@
   {
    "code": "0050",
    "name": "元大台灣50",
+   "group": "",
    "note": "",
    "status": "ok",
    "close": 84.45,
@@ -414,6 +416,7 @@
   {
    "code": "3711",
    "name": "日月光投控",
+   "group": "",
    "note": "",
    "status": "ok",
    "close": 457.0,
@@ -437,6 +440,7 @@
   {
    "code": "2308",
    "name": "台達電",
+   "group": "",
    "note": "",
    "status": "ok",
    "close": 900.0,
@@ -460,6 +464,7 @@
   {
    "code": "8046",
    "name": "南電",
+   "group": "",
    "note": "",
    "status": "ok",
    "close": 629.0,
