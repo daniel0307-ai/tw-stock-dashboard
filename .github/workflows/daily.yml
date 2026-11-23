@@ -26,6 +26,8 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    env:
+      HAS_DATA_REPO: ${{ secrets.DATA_REPO_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -58,5 +60,36 @@ jobs:
           else
             git commit -m "資料更新 $(TZ=Asia/Taipei date +%F)"
             git pull --rebase origin main   # 執行期間若儀表板又存了設定，先合併再推
+            git push
+          fi
+
+      # ---- 回測資料庫（私有 repo tw-stock-data）：失敗不影響上面的儀表板 ----
+      - name: 檢出回測資料庫
+        if: env.HAS_DATA_REPO == 'true' && github.event.inputs.latest != 'true'
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/tw-stock-data
+          token: ${{ secrets.DATA_REPO_TOKEN }}
+          path: datalake
+
+      - name: 更新回測資料庫
+        if: env.HAS_DATA_REPO == 'true' && github.event.inputs.latest != 'true' && hashFiles('datalake/.git/HEAD') != ''
+        continue-on-error: true
+        timeout-minutes: 15
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            python -m src.datalake --dir datalake --date "${{ github.event.inputs.date }}"
+          else
+            python -m src.datalake --dir datalake
+          fi
+          cd datalake
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "資料庫沒有新資料"
+          else
+            git commit -q -m "資料 $(TZ=Asia/Taipei date +%F)"
             git push
           fi
