@@ -34,9 +34,12 @@ class NoData(Exception):
 # ---------------------------------------------------------------- HTTP
 
 def get_json(path: str, params: dict) -> dict:
-    """GET 並回傳 JSON；含節流與重試。測試時會被替換成假資料。"""
+    return http_json(f"{BASE}/{path}", {**params, "response": "json"})
+
+
+def http_json(url: str, params: dict) -> dict:
+    """GET 並回傳 JSON；含節流與重試（證交所、櫃買共用）。測試時會被替換成假資料。"""
     global _last_request
-    url = f"{BASE}/{path}"
     last_err: Exception | None = None
     for attempt in range(4):
         wait = REQUEST_GAP - (time.time() - _last_request)
@@ -44,7 +47,7 @@ def get_json(path: str, params: dict) -> dict:
             time.sleep(wait)
         try:
             _last_request = time.time()
-            r = requests.get(url, params={**params, "response": "json"}, headers=HEADERS, timeout=30)
+            r = requests.get(url, params=params, headers=HEADERS, timeout=30)
             r.raise_for_status()
             return r.json()
         except Exception as e:  # noqa: BLE001
@@ -57,7 +60,7 @@ def get_json(path: str, params: dict) -> dict:
 
 def _tables(resp: dict) -> list[dict]:
     """把各種回應格式統一成 [{title, fields, data}]。"""
-    if resp.get("stat") not in (None, "OK"):
+    if str(resp.get("stat", "OK")).upper() != "OK":  # 證交所回 "OK"、櫃買回 "ok"
         return []
     out = []
     if isinstance(resp.get("tables"), list):
@@ -194,6 +197,31 @@ def fetch_institutional(d: date) -> pd.DataFrame:
         "dealer": num(r[i_dea]) / 1000.0,
         "total": num(r[i_tot]) / 1000.0,
     } for r in t["data"]])
+
+
+def fetch_margin(d: date) -> tuple[float | None, pd.DataFrame]:
+    """融資：回傳（市場融資金額增減（元）, 個股融資餘額 DataFrame[code, margin_prev, margin_today]（張））。"""
+    resp = get_json("marginTrading/MI_MARGN", {"date": ymd(d), "selectType": "ALL"})
+    chg = None
+    ts = _find_table(resp, "項目", "今日餘額")
+    if ts:
+        f = [str(x) for x in ts["fields"]]
+        for r in ts["data"]:
+            if "融資金額" in str(r[0]):
+                chg = (num(r[_col(f, "今日餘額")]) - num(r[_col(f, "前日餘額")])) * 1000  # 仟元 → 元
+                break
+    t = _find_table(resp, "代號", "今日餘額")
+    if t is None:
+        if chg is None:
+            raise NoData(f"{d} 無融資資料：{resp.get('stat')}")
+        return chg, pd.DataFrame(columns=["code", "margin_prev", "margin_today"])
+    f = [str(x) for x in t["fields"]]
+    # 欄位依序是「融資」群組再「融券」群組，第一個「前日餘額／今日餘額」即為融資
+    ic, ip, it = _col(f, "代號"), _col(f, "前日餘額"), _col(f, "今日餘額")
+    df = pd.DataFrame([{
+        "code": str(r[ic]).strip(), "margin_prev": num(r[ip]), "margin_today": num(r[it]),
+    } for r in t["data"]])
+    return chg, df
 
 
 def fetch_market_institutional(d: date) -> dict:

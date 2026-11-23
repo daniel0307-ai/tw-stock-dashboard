@@ -49,10 +49,49 @@ TAIEX = 22000 * np.exp(np.cumsum(rng.normal(0.0005, 0.01, N)))
 NODATA = {"stat": "很抱歉，沒有符合條件的資料!"}
 
 
-def fake(path, params):
-    ds = params.get("date") or params.get("dayDate")
+TPEX_CODES = [(str(3100 + k * 11), f"櫃買股{k:02d}") for k in range(40)]
+
+
+def path_is_index(url):
+    return url.endswith("indexInfo/inx")
+
+
+def fake_tpex(path, dd, i):
+    roc = f"{dd.year - 1911}/{dd.month:02d}/{dd.day:02d}"
+    if path.endswith("indexInfo/inx"):
+        rows = []
+        for x in DAYS:
+            if x.year == dd.year and x.month == dd.month:
+                j = IDX[x]
+                v = 250 + j * 0.3
+                rows.append([f"{x.year - 1911}/{x.month:02d}/{x.day:02d}", "1", "1", "1", f"{v:,.2f}", f"{0.3 if j % 3 else -1.2:.2f}"])
+        return {"stat": "ok", "tables": [{"title": "櫃買指數", "fields": ["日期", "開市", "最高", "最低", "收市", "漲/跌"], "data": rows}]}
+    if path.endswith("dailyQuotes"):
+        return {"stat": "ok", "date": roc, "tables": [{"fields": ["代號", "名稱", "收盤", "漲跌", "開盤", "最高", "最低", "均價", "成交股數", "成交金額(元)", "成交筆數"],
+                "data": [[c, n, f"{50 + k:.2f}", "0.5", "1", "1", "1", "1", "1,000", f"{(k + 1) * 123_456_789:,}", "1"] for k, (c, n) in enumerate(TPEX_CODES)]}]}
+    if path.endswith("insti/dailyTrade"):
+        f = ["代號", "名稱"] + [f"欄{k}" for k in range(2, 23)] + ["三大法人買賣超股數合計"]
+        data = []
+        for k, (c, n) in enumerate(TPEX_CODES):
+            r = [c, n] + ["0"] * 22
+            r[10] = f"{(k - 20) * 10000:,}"; r[13] = f"{(k % 5) * 3000:,}"; r[22] = "-5,000"; r[23] = "0"
+            data.append(r)
+        return {"stat": "ok", "tables": [{"fields": f, "data": data}]}
+    if path.endswith("margin/balance"):
+        return {"stat": "ok", "tables": [{"fields": ["代號", "名稱", "前資餘額(張)", "資買", "資賣", "現償", "資餘額", "資屬證金", "資使用率(%)", "資限額", "前券餘額(張)", "券賣", "券買", "券償", "券餘額"],
+                "data": [[c, n, "1,000", "1", "1", "1", f"{1000 + (k - 15) * 20:,}", "0", "1", "1", "1", "1", "1", "1", "1"] for k, (c, n) in enumerate(TPEX_CODES)]}]}
+    return NODATA
+
+
+def fake(url, params):
+    ds = (params.get("date") or params.get("dayDate")).replace("/", "")
     dd = date(int(ds[:4]), int(ds[4:6]), int(ds[6:]))
     i = IDX.get(dd)
+    if "tpex.org.tw" in url:
+        if path_is_index(url):
+            return fake_tpex(url, dd, i)
+        return NODATA if i is None else fake_tpex(url, dd, i)
+    path = url
     if i is None:
         return NODATA
     if path.endswith("MI_INDEX"):
@@ -92,6 +131,15 @@ def fake(path, params):
             data.append([c, n, "0", "0", f"{fr:,.0f}", "0", "0", "0", "0", "0", f"{tr:,.0f}", "1,000",
                          "0", "0", "0", "0", "0", "0", f"{fr+tr+1000:,.0f}"])
         return {"stat": "OK", "fields": f, "data": data}
+    if path.endswith("MI_MARGN"):
+        return {"stat": "OK", "tables": [
+            {"title": "信用交易統計", "fields": ["項目", "買進", "賣出", "現金(券)償還", "前日餘額", "今日餘額"],
+             "data": [["融資(交易單位)", "1", "1", "1", "8,000,000", "7,950,000"], ["融券(交易單位)", "1", "1", "1", "1", "1"],
+                      ["融資金額(仟元)", "1", "1", "1", "350,000,000", "342,500,000"]]},
+            {"title": "融資融券彙總", "fields": ["代號", "名稱", "買進", "賣出", "現金償還", "前日餘額", "今日餘額", "次一營業日限額",
+                                              "買進", "賣出", "現券償還", "前日餘額", "今日餘額", "次一營業日限額", "資券互抵", "註記"],
+             "data": [[c, n, "1", "1", "1", "5,000", f"{5000 + (k % 9 - 4) * 37:,}", "1", "1", "1", "1", "9", "9", "1", "0", ""]
+                      for k, (c, n) in enumerate(CODES)]}]}
     if path.endswith("BFI82U"):
         return {"stat": "OK", "fields": ["單位名稱", "買進金額", "賣出金額", "買賣差額"], "data": [
             ["自營商(自行買賣)", "1", "1", "-1,234,567,890"], ["自營商(避險)", "1", "1", "2,345,678,901"],
@@ -100,7 +148,9 @@ def fake(path, params):
     return NODATA
 
 
-twse.get_json = fake
+twse.http_json = fake
+from src import tpex as _tp  # noqa: E402
+_tp.http_json = fake
 if __name__ == "__main__":
     for ds in sys.argv[1:]:
         main.main(["--date", ds])

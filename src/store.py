@@ -18,7 +18,9 @@ for p in (PRICES, INST):
     p.mkdir(parents=True, exist_ok=True)
 
 MARKET_COLS = ["date", "taiex", "taiex_change", "taiex_change_pct", "value",
-               "inst_foreign", "inst_trust", "inst_dealer", "inst_total"]
+               "inst_foreign", "inst_trust", "inst_dealer", "inst_total", "margin_chg",
+               "tpex_index", "tpex_change", "tpex_change_pct", "tpex_value",
+               "tpex_inst_foreign", "tpex_inst_trust", "tpex_inst_dealer", "tpex_inst_total", "tpex_margin_chg"]
 
 
 def dates_in(folder: Path) -> list[str]:
@@ -51,6 +53,15 @@ def load_market() -> pd.DataFrame:
     if MARKET.exists():
         return pd.read_csv(MARKET, dtype={"date": str})
     return pd.DataFrame(columns=MARKET_COLS)
+
+
+def update_market(d: str, values: dict) -> None:
+    """更新某天的大盤數據（只覆蓋有給的欄位）。"""
+    m = load_market()
+    old = m[m["date"] == d].to_dict("records")
+    row = old[0] if old else {}
+    row.update({"date": d, **values})
+    upsert_market(row)
 
 
 def upsert_market(row: dict) -> None:

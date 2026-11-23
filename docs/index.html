@@ -67,8 +67,67 @@ section { background: var(--surface-1); border: 1px solid var(--border); border-
 .kpi .value { font-size: 22px; font-weight: 650; margin-top: 2px; }
 .kpi .sub { font-size: 13px; margin-top: 2px; }
 .up { color: var(--up); } .down { color: var(--down); } .flat { color: var(--text-secondary); }
-.market-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 900px) { .market-grid { grid-template-columns: 2fr 3fr; } }
+.mkt-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 900px) { .mkt-grid { grid-template-columns: 1fr 1fr; } }
+.mkt-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.mkt-head h3 { margin: 0; font-size: 15px; }
+.mkt-head .note { margin-left: auto; }
+.kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.kpi { background: var(--surface-2); border-color: transparent; padding: 12px 14px; }
+.kpi .value { font-size: 20px; }
+.chart-wrap { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--grid); }
+
+/* header actions & buttons */
+.sec-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.sec-head h2 { margin: 0; }
+.sec-head .actions { margin-left: auto; display: flex; gap: 8px; }
+header .actions { margin-left: auto; }
+.btn {
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { filter: brightness(1.05); }
+.btn.danger { color: var(--up); }
+.btn:disabled { opacity: .5; cursor: default; }
+.tabs.sm .tab { padding: 3px 12px; font-size: 13px; }
+
+/* dialog */
+dialog {
+  border: 1px solid var(--border); border-radius: 14px; padding: 0; width: min(640px, calc(100vw - 24px));
+  background: var(--surface-1); color: var(--text-primary); box-shadow: 0 12px 40px rgba(0,0,0,.25);
+}
+dialog::backdrop { background: rgba(0,0,0,.45); }
+.dlg-head { padding: 16px 20px 0; display: flex; align-items: center; }
+.dlg-head h3 { margin: 0; font-size: 16px; }
+.dlg-head .x { margin-left: auto; border: 0; background: none; color: var(--text-secondary); font-size: 20px; cursor: pointer; }
+.dlg-body { padding: 12px 20px; max-height: 65vh; overflow-y: auto; }
+.dlg-foot { padding: 12px 20px 16px; display: flex; gap: 8px; align-items: center; border-top: 1px solid var(--grid); }
+.dlg-foot .spacer { flex: 1; }
+.msg { font-size: 13px; padding: 8px 12px; border-radius: 8px; margin-top: 10px; display: none; }
+.msg.show { display: block; }
+.msg.ok { background: var(--accent-soft); color: var(--text-primary); }
+.msg.err { background: var(--warn-bg); color: var(--warn-text); }
+.field { display: grid; grid-template-columns: 1fr 120px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--grid); }
+.field label { font-size: 13px; }
+.field .hint { color: var(--text-muted); font-size: 12px; }
+.form-input, .field input, .edit-table input {
+  width: 100%; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  border-radius: 6px; padding: 6px 8px; font: inherit; font-size: 13px;
+}
+.field input { text-align: right; }
+.field input.err, .edit-table input.err { border-color: var(--up); }
+fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+legend { font-weight: 650; font-size: 14px; padding: 0; margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
+legend label { font-weight: 400; font-size: 13px; color: var(--text-secondary); }
+.edit-table { min-width: 0; }
+.edit-table td { padding: 4px; border: 0; }
+.edit-table td:first-child { width: 110px; }
+.edit-table td.nm { color: var(--text-secondary); font-size: 13px; width: 130px; white-space: normal; }
+.steps { margin: 6px 0 12px; padding-left: 20px; font-size: 13px; line-height: 1.8; }
+.steps code, .note code { background: var(--surface-2); padding: 0 4px; border-radius: 4px; }
 
 /* chart */
 .chart { position: relative; }
@@ -125,25 +184,39 @@ footer { color: var(--text-muted); font-size: 12px; margin-top: 24px; line-heigh
   <header>
     <h1>台股每日儀表板</h1>
     <span class="meta" id="meta">載入中…</span>
+    <div class="actions"><button class="btn" id="btnConn" type="button">連線設定</button></div>
   </header>
   <div id="warnings"></div>
 
-  <div class="market-grid" style="margin-top:12px">
-    <div class="kpis" id="kpis"></div>
-    <section style="margin-top:0">
-      <div class="chart-title">加權指數　近 60 個交易日</div>
-      <div class="chart" id="taiexChart"></div>
-    </section>
-  </div>
-
   <section>
-    <h2>我的自選股</h2>
-    <div class="tbl-wrap"><table id="watchTable"></table></div>
-    <p class="note" style="margin:8px 0 0">自選股清單請編輯 repo 裡的 <code>config/watchlist.csv</code>，下次排程更新後生效。左側紫色線＝今天有出現在篩選結果中。</p>
+    <div class="mkt-grid">
+      <div><div class="mkt-head"><h3>上市</h3><span class="note" id="twTotal"></span></div><div class="kpis" id="kpisTw"></div></div>
+      <div><div class="mkt-head"><h3>上櫃</h3><span class="note" id="tpTotal"></span></div><div class="kpis" id="kpisTp"></div></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="toolbar" style="margin-bottom:4px">
+        <div class="tabs sm" id="chartTabs"></div>
+        <span class="chart-title" style="margin:0 0 0 auto">近 60 個交易日</span>
+      </div>
+      <div class="chart" id="idxChart"></div>
+    </div>
   </section>
 
   <section>
-    <h2>今日篩選結果</h2>
+    <div class="sec-head">
+      <h2>我的自選股</h2>
+      <div class="tabs sm" id="watchTabs"></div>
+      <div class="actions"><button class="btn" id="btnEditWatch" type="button">編輯自選股</button></div>
+    </div>
+    <div class="tbl-wrap"><table id="watchTable"></table></div>
+    <p class="note" style="margin:8px 0 0">左側紫色線＝今天有出現在篩選結果中。融資增減、法人買賣超單位為張；上櫃股票目前沒有個股資料。</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>今日篩選結果</h2>
+      <div class="actions"><button class="btn" id="btnEditRules" type="button">調整篩選條件</button></div>
+    </div>
     <div class="toolbar">
       <div class="tabs" id="tabs" role="tablist"></div>
       <input type="search" id="search" placeholder="搜尋代號或名稱">
@@ -159,10 +232,62 @@ footer { color: var(--text-muted); font-size: 12px; margin-top: 24px; line-heigh
   </section>
 
   <footer>
-    資料來源：臺灣證券交易所盤後資料（僅上市股票）。每個交易日 17:30 左右自動更新。<br>
+    資料來源：臺灣證券交易所、證券櫃檯買賣中心盤後資料。篩選與自選股僅涵蓋上市股票；上櫃三大法人與融資金額以個股股數 × 收盤價估算。每個交易日 17:30 左右自動更新。<br>
     本頁內容為依固定條件自動篩選的結果，僅供參考，不構成任何投資建議。
   </footer>
 </div>
+
+<!-- 連線設定 -->
+<dialog id="dlgConn">
+  <div class="dlg-head"><h3>連線設定</h3><button class="x" data-close aria-label="關閉">×</button></div>
+  <div class="dlg-body">
+    <p class="note" style="font-size:13px;margin-top:0">在儀表板上編輯的內容會直接存回你的 GitHub repo，需要一組只能存取這個 repo 的權杖（token）。權杖只會存在這台裝置的瀏覽器裡。</p>
+    <ol class="steps">
+      <li>打開 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub 建立權杖頁面</a></li>
+      <li>Token name 隨意填（例如 <code>dashboard</code>），Expiration 建議選 1 年</li>
+      <li>Repository access 選「Only select repositories」，只勾這個 repo</li>
+      <li>Permissions → Repository permissions：<code>Contents</code> 與 <code>Actions</code> 都設為 <b>Read and write</b></li>
+      <li>按 Generate token，複製後貼到下方</li>
+    </ol>
+    <div class="field" style="grid-template-columns:110px 1fr"><label for="cRepo">Repo</label><input id="cRepo" class="form-input" style="text-align:left" placeholder="帳號/repo 名稱"></div>
+    <div class="field" style="grid-template-columns:110px 1fr"><label for="cToken">權杖</label><input id="cToken" class="form-input" style="text-align:left" type="password" placeholder="github_pat_…" autocomplete="off"></div>
+    <div class="msg" id="cMsg"></div>
+  </div>
+  <div class="dlg-foot">
+    <button class="btn danger" id="cClear" type="button">清除權杖</button>
+    <span class="spacer"></span>
+    <button class="btn" data-close type="button">取消</button>
+    <button class="btn primary" id="cSave" type="button">測試並儲存</button>
+  </div>
+</dialog>
+
+<!-- 編輯自選股 -->
+<dialog id="dlgWatch">
+  <div class="dlg-head"><h3>編輯自選股</h3><button class="x" data-close aria-label="關閉">×</button></div>
+  <div class="dlg-body">
+    <table class="edit-table"><thead><tr><th class="l">代號</th><th class="l">名稱</th><th class="l">備註</th><th></th></tr></thead><tbody id="wRows"></tbody></table>
+    <button class="btn" id="wAdd" type="button" style="margin-top:8px">＋ 新增一檔</button>
+    <p class="note">輸入代號會自動帶出名稱。上櫃股票可以加入，但目前不會有資料。</p>
+    <div class="msg" id="wMsg"></div>
+  </div>
+  <div class="dlg-foot">
+    <span class="spacer"></span>
+    <button class="btn" data-close type="button">取消</button>
+    <button class="btn primary" id="wSave" type="button">儲存並更新</button>
+  </div>
+</dialog>
+
+<!-- 調整篩選條件 -->
+<dialog id="dlgRules">
+  <div class="dlg-head"><h3>調整篩選條件</h3><button class="x" data-close aria-label="關閉">×</button></div>
+  <div class="dlg-body"><div id="rBody"></div><div class="msg" id="rMsg"></div></div>
+  <div class="dlg-foot">
+    <button class="btn" id="rReset" type="button">還原初版數值</button>
+    <span class="spacer"></span>
+    <button class="btn" data-close type="button">取消</button>
+    <button class="btn primary" id="rSave" type="button">儲存並更新</button>
+  </div>
+</dialog>
 
 <script>
 const $ = (s) => document.querySelector(s);
@@ -178,6 +303,7 @@ function signed(v, d = 2, suffix = "") {
 }
 function signedInt(v, suffix = "") {
   if (v == null) return '<span class="muted">—</span>';
+  v = Math.round(v);
   const cls = v > 0 ? "up" : v < 0 ? "down" : "flat";
   return `<span class="${cls}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(Math.round(v)).toLocaleString("zh-TW")}${suffix}</span>`;
 }
@@ -218,77 +344,109 @@ function renderTable(el, cols, rows, defaultSort) {
   draw();
 }
 
-/* ---------- 加權指數走勢（單一序列 + 十字線提示） ---------- */
-function drawTaiex(el, series) {
-  const pts = series.filter(p => p.taiex != null);
-  if (pts.length < 2) { el.innerHTML = '<div class="status">資料累積中</div>'; return; }
-  const W = 600, H = 200, m = { t: 10, r: 12, b: 24, l: 52 };
-  const ys = pts.map(p => p.taiex);
+/* ---------- 指數走勢（單一序列 + 十字線提示） ---------- */
+function drawIndex(el, series, key, label) {
+  const pts = series.filter(p => p[key] != null).map(p => ({ date: p.date, v: p[key] }));
+  if (pts.length < 2) { el.innerHTML = `<div class="status">${label}走勢資料累積中，每天會多一筆</div>`; return; }
+  const W = 1000, H = 220, m = { t: 12, r: 12, b: 26, l: 60 };
+  const ys = pts.map(p => p.v);
   let lo = Math.min(...ys), hi = Math.max(...ys);
   const pad = (hi - lo) * 0.08 || 10; lo -= pad; hi += pad;
   const x = i => m.l + (W - m.l - m.r) * i / (pts.length - 1);
   const y = v => m.t + (H - m.t - m.b) * (1 - (v - lo) / (hi - lo));
   const ticks = [0, 1, 2, 3].map(i => lo + (hi - lo) * i / 3);
-  const path = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.taiex).toFixed(1)}`).join("");
+  const path = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
   const xl = [0, Math.floor((pts.length - 1) / 2), pts.length - 1];
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="加權指數近 ${pts.length} 個交易日走勢">
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}近 ${pts.length} 個交易日走勢">
     ${ticks.map(t => `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--grid)" stroke-width="1"/>
-      <text x="${m.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="var(--text-muted)">${Math.round(t).toLocaleString("zh-TW")}</text>`).join("")}
-    ${xl.map(i => `<text x="${x(i)}" y="${H - 6}" text-anchor="${i === 0 ? "start" : i === pts.length - 1 ? "end" : "middle"}" font-size="11" fill="var(--text-muted)">${pts[i].date.slice(5)}</text>`).join("")}
-    <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-    <line id="cx" y1="${m.t}" y2="${H - m.b}" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3" style="display:none" vector-effect="non-scaling-stroke"/>
-    <circle id="cd" r="4" fill="var(--accent)" stroke="var(--surface-1)" stroke-width="2" style="display:none"/>
-    <rect x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent" id="hit"/>
+      <text x="${m.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="12" fill="var(--text-muted)">${Math.round(t).toLocaleString("zh-TW")}</text>`).join("")}
+    ${xl.map(i => `<text x="${x(i)}" y="${H - 6}" text-anchor="${i === 0 ? "start" : i === pts.length - 1 ? "end" : "middle"}" font-size="12" fill="var(--text-muted)">${pts[i].date.slice(5)}</text>`).join("")}
+    <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+    <line class="cx" y1="${m.t}" y2="${H - m.b}" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3" style="display:none"/>
+    <circle class="cd" r="4.5" fill="var(--accent)" stroke="var(--surface-1)" stroke-width="2" style="display:none"/>
+    <rect x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent"/>
   </svg><div class="tip"></div>`;
-  const svg = el.querySelector("svg"), tip = el.querySelector(".tip"), cx = svg.querySelector("#cx"), cd = svg.querySelector("#cd");
+  const svg = el.querySelector("svg"), tip = el.querySelector(".tip"), cx = svg.querySelector(".cx"), cd = svg.querySelector(".cd");
   function move(ev) {
     const r = svg.getBoundingClientRect();
     const px = (ev.clientX - r.left) / r.width * W;
     const i = Math.max(0, Math.min(pts.length - 1, Math.round((px - m.l) / (W - m.l - m.r) * (pts.length - 1))));
     const p = pts[i], prev = pts[i - 1];
     cx.setAttribute("x1", x(i)); cx.setAttribute("x2", x(i)); cx.style.display = "";
-    cd.setAttribute("cx", x(i)); cd.setAttribute("cy", y(p.taiex)); cd.style.display = "";
-    const ch = prev ? p.taiex - prev.taiex : null;
-    tip.innerHTML = `<div class="muted">${p.date}</div><b>${fmt(p.taiex)}</b> ${ch == null ? "" : signed(ch)}`;
+    cd.setAttribute("cx", x(i)); cd.setAttribute("cy", y(p.v)); cd.style.display = "";
+    const ch = prev ? p.v - prev.v : null;
+    tip.innerHTML = `<div class="muted">${p.date}</div><b>${fmt(p.v)}</b> ${ch == null ? "" : signed(ch)}`;
     tip.style.display = "block";
     const left = x(i) / W * r.width;
     tip.style.left = Math.min(r.width - tip.offsetWidth, Math.max(0, left - tip.offsetWidth / 2)) + "px";
-    tip.style.top = Math.max(0, y(p.taiex) / H * r.height - tip.offsetHeight - 12) + "px";
+    tip.style.top = Math.max(0, y(p.v) / H * r.height - tip.offsetHeight - 12) + "px";
   }
   svg.addEventListener("pointermove", move);
   svg.addEventListener("pointerleave", () => { tip.style.display = "none"; cx.style.display = "none"; cd.style.display = "none"; });
 }
 
-/* ---------- 各區塊 ---------- */
-function renderKpis(mk) {
-  const inst = (label, v) => `<div class="kpi"><div class="label">${label}</div><div class="value">${signedInt(v == null ? null : v / 1e8)}</div><div class="sub muted">億元</div></div>`;
-  $("#kpis").innerHTML = `
-    <div class="kpi"><div class="label">加權指數</div><div class="value">${fmt(mk.taiex)}</div>
-      <div class="sub">${signed(mk.taiex_change)}　${signed(mk.taiex_change_pct, 2, "%")}</div></div>
-    <div class="kpi"><div class="label">成交金額</div><div class="value">${yi(mk.value)}</div><div class="sub muted">億元</div></div>
-    ${inst("外資買賣超", mk.inst_foreign)}
-    ${inst("投信買賣超", mk.inst_trust)}
-    ${inst("自營商買賣超", mk.inst_dealer)}
-    ${inst("三大法人合計", mk.inst_total)}`;
+let chartKey = "taiex";
+function renderChart() {
+  const opts = [["taiex", "加權指數"], ["tpex_index", "櫃買指數"]];
+  $("#chartTabs").innerHTML = opts.map(([k, l]) => `<button class="tab" type="button" aria-selected="${k === chartKey}" data-k="${k}">${l}</button>`).join("");
+  $("#chartTabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { chartKey = b.dataset.k; renderChart(); });
+  drawIndex($("#idxChart"), DATA.market_history, chartKey, opts.find(o => o[0] === chartKey)[1]);
 }
 
+/* ---------- 大盤：上市 / 上櫃 ---------- */
+function renderMarket(mk) {
+  const amt = (label, v, est) => `<div class="kpi"><div class="label">${label}</div><div class="value">${signedInt(v == null ? null : v / 1e8)}</div><div class="sub muted">億元${est ? "（估）" : ""}</div></div>`;
+  const group = (p, idxLabel, est) => `
+    <div class="kpi"><div class="label">${idxLabel}</div><div class="value">${fmt(mk[p + "index"] ?? mk[p === "" ? "taiex" : "tpex_index"])}</div>
+      <div class="sub">${signed(mk[p === "" ? "taiex_change" : "tpex_change"])}　${signed(mk[p === "" ? "taiex_change_pct" : "tpex_change_pct"], 2, "%")}</div></div>
+    <div class="kpi"><div class="label">成交金額</div><div class="value">${yi(mk[p === "" ? "value" : "tpex_value"])}</div><div class="sub muted">億元</div></div>
+    ${amt("融資增減", mk[p === "" ? "margin_chg" : "tpex_margin_chg"], est)}
+    ${amt("外資買賣超", mk[p + "inst_foreign"], est)}
+    ${amt("投信買賣超", mk[p + "inst_trust"], est)}
+    ${amt("自營商買賣超", mk[p + "inst_dealer"], est)}`;
+  $("#kpisTw").innerHTML = group("", "加權指數", false);
+  $("#kpisTp").innerHTML = group("tpex_", "櫃買指數", true);
+  const total = v => v == null ? "" : `三大法人合計 ${signedInt(v / 1e8)} 億`;
+  $("#twTotal").innerHTML = total(mk.inst_total);
+  $("#tpTotal").innerHTML = total(mk.tpex_inst_total);
+}
+
+/* ---------- 自選股（分類 tab） ---------- */
 const hitSort = r => (r.hits ? r.hits.length : 0);
+const okRow = r => r.status === "ok";
+const W_COL = {
+  stock: { key: "code", label: "股票", align: "l", render: r => stockCell(r) + (r.note ? `<div class="note">${esc(r.note)}</div>` : "") },
+  close: { key: "close", label: "收盤", render: r => okRow(r) ? fmt(r.close) : `<span class="note">${esc(r.status)}</span>` },
+  chg: { key: "chg_pct", label: "漲跌幅", render: r => signed(r.chg_pct, 2, "%") },
+  vol: { key: "volume", label: "成交量(張)", render: r => int(r.volume) },
+  vr: { key: "vol_ratio", label: "量比", render: r => r.vol_ratio == null ? "—" : fmt(r.vol_ratio) + "×" },
+  ma20: { key: "ma20_dist", label: "距 20 日線", render: r => signed(r.ma20_dist, 1, "%") },
+  ma60: { key: "ma60_dist", label: "距 60 日線", render: r => signed(r.ma60_dist, 1, "%") },
+  f1: { key: "foreign1", label: "外資今日", render: r => signedInt(r.foreign1) },
+  f5: { key: "foreign5", label: "外資 5 日", render: r => signedInt(r.foreign5) },
+  t1: { key: "trust1", label: "投信今日", render: r => signedInt(r.trust1) },
+  t5: { key: "trust5", label: "投信 5 日", render: r => signedInt(r.trust5) },
+  d5: { key: "dealer5", label: "自營商 5 日", render: r => signedInt(r.dealer5) },
+  mc: { key: "margin_chg", label: "融資增減", render: r => signedInt(r.margin_chg) },
+  mb: { key: "margin_bal", label: "融資餘額", render: r => int(r.margin_bal) },
+  pe: { key: "pe", label: "本益比", render: r => fmt(r.pe) },
+  yld: { key: "yield", label: "殖利率", render: r => r.yield == null ? "—" : fmt(r.yield) + "%" },
+  pb: { key: "pb", label: "淨值比", render: r => fmt(r.pb) },
+  hits: { key: "hits", label: "今日命中", align: "l", sortVal: hitSort, render: r => hitBadges(r.hits) },
+};
+const W_TABS = [
+  ["all", "全部", ["stock", "close", "chg", "vol", "ma20", "ma60", "f5", "t5", "mc", "pe", "yld", "pb", "hits"]],
+  ["tech", "技術", ["stock", "close", "chg", "vol", "vr", "ma20", "ma60", "hits"]],
+  ["chip", "籌碼", ["stock", "close", "chg", "f1", "f5", "t1", "t5", "d5", "mc", "mb", "hits"]],
+  ["fund", "基本面", ["stock", "close", "chg", "pe", "yld", "pb", "hits"]],
+];
+let watchTab = "all";
 function renderWatch(rows) {
-  const ok = r => r.status === "ok";
-  const cols = [
-    { key: "code", label: "股票", align: "l", render: r => stockCell(r) + (r.note ? `<div class="note">${esc(r.note)}</div>` : "") },
-    { key: "close", label: "收盤", render: r => ok(r) ? fmt(r.close) : `<span class="note">${esc(r.status)}</span>` },
-    { key: "chg_pct", label: "漲跌幅", render: r => signed(r.chg_pct, 2, "%") },
-    { key: "ma20_dist", label: "距 20 日線", render: r => signed(r.ma20_dist, 1, "%") },
-    { key: "ma60_dist", label: "距 60 日線", render: r => signed(r.ma60_dist, 1, "%") },
-    { key: "foreign5", label: "外資 5 日(張)", render: r => signedInt(r.foreign5) },
-    { key: "trust5", label: "投信 5 日(張)", render: r => signedInt(r.trust5) },
-    { key: "pe", label: "本益比", render: r => fmt(r.pe) },
-    { key: "yield", label: "殖利率", render: r => r.yield == null ? "—" : fmt(r.yield) + "%" },
-    { key: "pb", label: "淨值比", render: r => fmt(r.pb) },
-    { key: "hits", label: "今日命中", align: "l", sortVal: hitSort, render: r => hitBadges(r.hits) },
-  ];
-  if (!rows.length) { $("#watchTable").outerHTML = '<div class="status">尚未設定自選股</div>'; return; }
+  $("#watchTabs").innerHTML = W_TABS.map(([k, l]) => `<button class="tab" type="button" aria-selected="${k === watchTab}" data-k="${k}">${l}</button>`).join("");
+  $("#watchTabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { watchTab = b.dataset.k; renderWatch(rows); });
+  const wrap = $("#watchTable").parentElement;
+  if (!rows.length) { wrap.innerHTML = '<div class="status">尚未設定自選股，按右上角「編輯自選股」新增</div><table id="watchTable" hidden></table>'; return; }
+  const cols = W_TABS.find(t => t[0] === watchTab)[2].map(k => W_COL[k]);
   renderTable($("#watchTable"), cols, rows);
 }
 
@@ -370,6 +528,229 @@ function renderTracking(t) {
   ], t.recent);
 }
 
+/* ======================================================================
+   編輯功能：直接透過 GitHub API 寫回 repo，並觸發排程重算
+   ====================================================================== */
+const LS_KEY = "twdash.github";
+const WORKFLOW = "daily.yml";
+function ghConf() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch { return {}; } }
+function setGhConf(c) { try { localStorage.setItem(LS_KEY, JSON.stringify(c)); return true; } catch { return false; } }
+function guessRepo() {
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  const seg = location.pathname.split("/").filter(Boolean)[0];
+  return m && seg ? `${m[1]}/${seg}` : "";
+}
+class GhError extends Error { constructor(status, body) { super(`HTTP ${status}`); this.status = status; this.body = body; } }
+async function gh(path, opts = {}, conf = ghConf()) {
+  const res = await fetch(`https://api.github.com/repos/${conf.repo}${path}`, {
+    ...opts,
+    headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${conf.token}`, "X-GitHub-Api-Version": "2022-11-28" },
+  });
+  if (!res.ok) throw new GhError(res.status, await res.text().catch(() => ""));
+  return res.status === 204 ? null : res.json();
+}
+function ghErrText(e) {
+  if (!(e instanceof GhError)) return "連線失敗，請確認網路後再試一次。";
+  if (e.status === 401) return "權杖無效或已過期，請到「連線設定」重新貼上。";
+  if (e.status === 403) return "權杖權限不足：Contents 與 Actions 都要設為 Read and write。";
+  if (e.status === 404) return "找不到 repo，或權杖沒有被授權存取這個 repo（Repository access 要勾選它）。";
+  if (e.status === 409 || e.status === 422) return "檔案剛好被其他地方修改，請重新整理頁面後再試。";
+  return `GitHub 回應錯誤（${e.status}）。`;
+}
+const b64enc = (str) => { const bytes = new TextEncoder().encode(str); let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); };
+const b64dec = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), c => c.charCodeAt(0)));
+async function getFile(path) {
+  const c = ghConf();
+  const r = await gh(`/contents/${path}?ref=${encodeURIComponent(c.branch || "main")}&t=${Date.now()}`);
+  return { sha: r.sha, text: b64dec(r.content) };
+}
+async function putFile(path, text, sha, message) {
+  const c = ghConf();
+  return gh(`/contents/${path}`, { method: "PUT", body: JSON.stringify({ message, content: b64enc(text), sha, branch: c.branch || "main" }) });
+}
+async function runWorkflow() {
+  const c = ghConf();
+  return gh(`/actions/workflows/${WORKFLOW}/dispatches`, { method: "POST", body: JSON.stringify({ ref: c.branch || "main", inputs: { latest: "true" } }) });
+}
+function showMsg(el, kind, html) { el.className = `msg show ${kind}`; el.innerHTML = html; }
+function hasConn() { const c = ghConf(); return !!(c.repo && c.token); }
+function needConn(afterOpen) {
+  if (hasConn()) return false;
+  openConn("請先完成連線設定，儲存後再編輯一次。");
+  return true;
+}
+/** 讀取 → 修改 → 寫回 → 觸發排程 */
+async function saveFile(path, transform, message, msgEl, btn) {
+  btn.disabled = true;
+  showMsg(msgEl, "ok", "儲存中…");
+  try {
+    const cur = await getFile(path);
+    const next = transform(cur.text);
+    if (next === cur.text) { showMsg(msgEl, "ok", "內容沒有變更。"); btn.disabled = false; return false; }
+    await putFile(path, next, cur.sha, message);
+    showMsg(msgEl, "ok", "已儲存，正在觸發排程重算…");
+    let ran = true;
+    try { await runWorkflow(); } catch (e) { ran = false; }
+    const link = `https://github.com/${ghConf().repo}/actions`;
+    showMsg(msgEl, "ok", ran
+      ? `已儲存並開始重算。約 3–5 分鐘後重新整理本頁就會看到新結果（<a href="${link}" target="_blank" rel="noopener">查看執行進度</a>）。`
+      : `已儲存，但無法自動觸發排程（權杖的 Actions 權限可能不足）。新設定會在下一次排程時生效，或到 <a href="${link}" target="_blank" rel="noopener">Actions</a> 手動執行。`);
+    return true;
+  } catch (e) {
+    showMsg(msgEl, "err", ghErrText(e));
+    return false;
+  } finally {
+    btn.disabled = false;
+  }
+}
+document.querySelectorAll("dialog [data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
+
+/* ---------- 連線設定 ---------- */
+function openConn(notice) {
+  const c = ghConf();
+  $("#cRepo").value = c.repo || guessRepo();
+  $("#cToken").value = "";
+  $("#cToken").placeholder = c.token ? "已設定（留空沿用目前的權杖）" : "github_pat_…";
+  const m = $("#cMsg");
+  if (notice) showMsg(m, "err", esc(notice)); else m.className = "msg";
+  $("#dlgConn").showModal();
+}
+$("#btnConn").onclick = () => openConn();
+$("#cClear").onclick = () => { setGhConf({}); openConn(); showMsg($("#cMsg"), "ok", "已清除這台裝置上的權杖。"); };
+$("#cSave").onclick = async () => {
+  const old = ghConf();
+  const conf = { repo: $("#cRepo").value.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, ""), token: $("#cToken").value.trim() || old.token };
+  const m = $("#cMsg");
+  if (!/^[\w.-]+\/[\w.-]+$/.test(conf.repo)) return showMsg(m, "err", "Repo 格式應為「帳號/repo 名稱」。");
+  if (!conf.token) return showMsg(m, "err", "請貼上權杖。");
+  $("#cSave").disabled = true;
+  showMsg(m, "ok", "測試連線中…");
+  try {
+    const repo = await gh("", {}, conf);
+    conf.branch = repo.default_branch || "main";
+    await gh(`/contents/config/watchlist.csv?ref=${conf.branch}`, {}, conf);
+    await gh(`/actions/workflows/${WORKFLOW}`, {}, conf);
+    if (!setGhConf(conf)) throw new Error("storage");
+    showMsg(m, "ok", "連線成功，已儲存在這台裝置。現在可以編輯自選股和篩選條件了。");
+  } catch (e) {
+    showMsg(m, "err", e.message === "storage" ? "瀏覽器不允許儲存設定（可能是無痕模式）。" : ghErrText(e));
+  } finally {
+    $("#cSave").disabled = false;
+  }
+};
+
+/* ---------- 編輯自選股 ---------- */
+function parseCSV(text) {
+  const rows = [];
+  for (const line of text.replace(/^﻿/, "").split(/\r?\n/)) {
+    if (!line.trim()) continue;
+    const out = []; let cur = "", q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (q) { if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; }
+      else if (ch === '"') q = true; else if (ch === ",") { out.push(cur); cur = ""; } else cur += ch;
+    }
+    out.push(cur); rows.push(out);
+  }
+  return rows;
+}
+const csvCell = (v) => /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+function watchRowHtml(r = {}) {
+  return `<tr><td><input class="w-code" value="${esc(r.code || "")}" placeholder="例 2330" maxlength="6"></td>
+    <td class="nm"><input class="w-name" value="${esc(r.name || "")}" placeholder="名稱"></td>
+    <td><input class="w-note" value="${esc(r.note || "")}" placeholder="備註（選填）"></td>
+    <td><button class="btn danger w-del" type="button" aria-label="刪除">刪除</button></td></tr>`;
+}
+function bindWatchRows() {
+  $("#wRows").querySelectorAll("tr").forEach(tr => {
+    const code = tr.querySelector(".w-code"), name = tr.querySelector(".w-name");
+    code.oninput = () => {
+      code.value = code.value.toUpperCase().replace(/\s/g, "");
+      code.classList.remove("err");
+      const n = (DATA.names || {})[code.value];
+      if (n) name.value = n;
+    };
+    tr.querySelector(".w-del").onclick = () => tr.remove();
+  });
+}
+function fillWatch(rows) { $("#wRows").innerHTML = rows.map(watchRowHtml).join(""); bindWatchRows(); }
+$("#btnEditWatch").onclick = async () => {
+  if (needConn()) return;
+  $("#wMsg").className = "msg";
+  fillWatch(DATA.watchlist.map(r => ({ code: r.code, name: r.name, note: r.note })));
+  $("#dlgWatch").showModal();
+  try {  // 以 repo 上最新的清單為準
+    const f = await getFile("config/watchlist.csv");
+    const rows = parseCSV(f.text).slice(1).filter(r => (r[0] || "").trim()).map(r => ({ code: r[0].trim(), name: (r[1] || "").trim(), note: (r[2] || "").trim() }));
+    fillWatch(rows);
+  } catch (e) { showMsg($("#wMsg"), "err", ghErrText(e)); }
+};
+$("#wAdd").onclick = () => { $("#wRows").insertAdjacentHTML("beforeend", watchRowHtml()); bindWatchRows(); $("#wRows").lastElementChild.querySelector(".w-code").focus(); };
+$("#wSave").onclick = async () => {
+  const rows = [], seen = new Set(); let bad = false;
+  $("#wRows").querySelectorAll("tr").forEach(tr => {
+    const ci = tr.querySelector(".w-code"), code = ci.value.trim();
+    const name = tr.querySelector(".w-name").value.trim(), note = tr.querySelector(".w-note").value.trim();
+    if (!code && !name && !note) return;
+    if (!/^[0-9A-Z]{4,6}$/.test(code) || seen.has(code)) { ci.classList.add("err"); bad = true; return; }
+    seen.add(code); rows.push([code, name, note]);
+  });
+  if (bad) return showMsg($("#wMsg"), "err", "代號要是 4–6 碼英數字，且不能重複（紅框標示）。");
+  const csv = "代號,名稱,備註\n" + rows.map(r => r.map(csvCell).join(",")).join("\n") + "\n";
+  await saveFile("config/watchlist.csv", () => csv, "從儀表板更新自選股", $("#wMsg"), $("#wSave"));
+};
+
+/* ---------- 調整篩選條件 ---------- */
+const RULES = [
+  { sec: "common", title: "共同門檻", fields: [["min_avg_volume_20d", "近 20 日平均成交量下限", "張", 1000, true]] },
+  { sec: "value", title: "價值型", toggle: true, fields: [
+    ["pe_max", "本益比上限", "倍", 15], ["yield_min", "殖利率下限", "%", 5], ["pb_max", "股價淨值比上限", "倍", 1.5]] },
+  { sec: "momentum", title: "動能型", toggle: true, fields: [
+    ["ma_days", "站上幾日均線", "日", 20, true, 120], ["volume_ratio_min", "量比下限（當日量 ÷ 前 N 日均量）", "倍", 1.5],
+    ["volume_ratio_base_days", "量比基準天數 N", "日", 5, true, 60], ["inst_streak_min", "外資或投信連續買超天數", "日", 3, true, 30]] },
+  { sec: "growth", title: "成長型", toggle: true, note: "需設定 FinMind 後才會生效", fields: [
+    ["revenue_yoy_min", "最近一期月營收年增率下限", "%", 20], ["revenue_positive_months", "連續年增為正的月數", "月", 3, true, 12],
+    ["ma_days", "站上幾日均線", "日", 60, true, 120]] },
+];
+function fillRules(cfg) {
+  $("#rBody").innerHTML = RULES.map(g => `<fieldset data-sec="${g.sec}">
+    <legend>${g.title}${g.toggle ? `<label><input type="checkbox" class="r-en" ${cfg[g.sec]?.enabled !== false ? "checked" : ""}> 啟用</label>` : ""}${g.note ? `<span class="note">${g.note}</span>` : ""}</legend>
+    ${g.fields.map(([k, label, unit, def, isInt, max]) => `<div class="field"><label>${label}<span class="hint">（${unit}）</span></label>
+      <input type="number" inputmode="decimal" step="${isInt ? 1 : "any"}" min="0" ${max ? `max="${max}"` : ""} data-k="${k}" data-int="${isInt ? 1 : ""}" data-max="${max || ""}" data-def="${def}" value="${cfg[g.sec]?.[k] ?? def}"></div>`).join("")}
+  </fieldset>`).join("");
+}
+$("#btnEditRules").onclick = async () => {
+  if (needConn()) return;
+  $("#rMsg").className = "msg";
+  fillRules(DATA.config);
+  $("#dlgRules").showModal();
+  try { fillRules(JSON.parse((await getFile("config/strategies.json")).text)); }
+  catch (e) { showMsg($("#rMsg"), "err", ghErrText(e)); }
+};
+$("#rReset").onclick = () => {
+  $("#rBody").querySelectorAll("input[type=number]").forEach(i => { i.value = i.dataset.def; i.classList.remove("err"); });
+  $("#rBody").querySelectorAll(".r-en").forEach(c => c.checked = true);
+};
+$("#rSave").onclick = async () => {
+  const vals = {}; let bad = false;
+  $("#rBody").querySelectorAll("fieldset").forEach(fs => {
+    const sec = fs.dataset.sec; vals[sec] = {};
+    const en = fs.querySelector(".r-en"); if (en) vals[sec].enabled = en.checked;
+    fs.querySelectorAll("input[type=number]").forEach(i => {
+      const v = Number(i.value), max = Number(i.dataset.max || Infinity);
+      const ok = i.value !== "" && isFinite(v) && v > 0 && v <= max && (!i.dataset.int || Number.isInteger(v));
+      i.classList.toggle("err", !ok); if (!ok) bad = true;
+      vals[sec][i.dataset.k] = v;
+    });
+  });
+  if (bad) return showMsg($("#rMsg"), "err", "紅框的數值不正確：需大於 0，天數／月數要是整數，且不能超過上限。");
+  await saveFile("config/strategies.json", (text) => {
+    const cfg = JSON.parse(text);
+    for (const [sec, kv] of Object.entries(vals)) cfg[sec] = { ...(cfg[sec] || {}), ...kv };
+    return JSON.stringify(cfg, null, 2) + "\n";
+  }, "從儀表板調整篩選條件", $("#rMsg"), $("#rSave"));
+};
+
 async function load() {
   try {
     const res = await fetch("data/latest.json?t=" + Date.now());
@@ -381,8 +762,8 @@ async function load() {
   }
   $("#meta").textContent = `資料日期 ${DATA.date}　·　更新於 ${DATA.generated_at}　·　歷史 ${DATA.history_days} 個交易日`;
   if (DATA.warnings.length) $("#warnings").innerHTML = `<div class="warn">注意事項<ul>${DATA.warnings.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>`;
-  renderKpis(DATA.market);
-  drawTaiex($("#taiexChart"), DATA.market_history);
+  renderMarket(DATA.market);
+  renderChart();
   renderWatch(DATA.watchlist);
   renderScreens();
   $("#search").oninput = renderScreens;

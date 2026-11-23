@@ -25,7 +25,7 @@ def _streak(arr: np.ndarray) -> int:
 
 
 def indicators(prices: pd.DataFrame, inst: pd.DataFrame, latest_quotes: pd.DataFrame,
-               valuation: pd.DataFrame, cfg: dict) -> pd.DataFrame:
+               valuation: pd.DataFrame, cfg: dict, margin: pd.DataFrame | None = None) -> pd.DataFrame:
     close = prices.pivot(index="date", columns="code", values="close").sort_index()
     vol = prices.pivot(index="date", columns="code", values="volume").sort_index()
 
@@ -51,18 +51,27 @@ def indicators(prices: pd.DataFrame, inst: pd.DataFrame, latest_quotes: pd.DataF
     df["vol_ratio"] = (df["volume"] / base.reindex(df.index)).replace([np.inf, -np.inf], np.nan)
 
     if not inst.empty:
-        f = inst.pivot(index="date", columns="code", values="foreign").sort_index()
-        t = inst.pivot(index="date", columns="code", values="trust").sort_index()
         all_dates = sorted(inst["date"].unique())
-        f = f.reindex(all_dates).fillna(0)
-        t = t.reindex(all_dates).fillna(0)
+        f = inst.pivot(index="date", columns="code", values="foreign").reindex(all_dates).fillna(0)
+        t = inst.pivot(index="date", columns="code", values="trust").reindex(all_dates).fillna(0)
+        dl = inst.pivot(index="date", columns="code", values="dealer").reindex(all_dates).fillna(0)
+        df["foreign1"] = f.iloc[-1].reindex(df.index)
+        df["trust1"] = t.iloc[-1].reindex(df.index)
+        df["dealer5"] = dl.iloc[-5:].sum().reindex(df.index)
         df["foreign_streak"] = pd.Series({c: _streak(f[c].values) for c in f.columns}).reindex(df.index).fillna(0)
         df["trust_streak"] = pd.Series({c: _streak(t[c].values) for c in t.columns}).reindex(df.index).fillna(0)
         df["foreign5"] = f.iloc[-5:].sum().reindex(df.index)
         df["trust5"] = t.iloc[-5:].sum().reindex(df.index)
     else:
-        for c in ("foreign_streak", "trust_streak", "foreign5", "trust5"):
+        for c in ("foreign_streak", "trust_streak", "foreign5", "trust5", "foreign1", "trust1", "dealer5"):
             df[c] = np.nan
+
+    if margin is not None and not margin.empty:
+        mg = margin.drop_duplicates("code").set_index("code")
+        df["margin_chg"] = (mg["margin_today"] - mg["margin_prev"]).reindex(df.index)
+        df["margin_bal"] = mg["margin_today"].reindex(df.index)
+    else:
+        df["margin_chg"] = df["margin_bal"] = np.nan
 
     v = valuation.set_index("code")[["pe", "yield", "pb"]] if not valuation.empty else pd.DataFrame(columns=["pe", "yield", "pb"])
     df = df.join(v, how="left")
@@ -144,7 +153,9 @@ def records(df: pd.DataFrame, cols: list[str], hits: dict[str, list[str]]) -> li
     return out
 
 
-WATCH_COLS = ["close", "chg_pct", "ma20_dist", "ma60_dist", "foreign5", "trust5", "pe", "yield", "pb", "volume"]
+WATCH_COLS = ["close", "chg_pct", "volume", "vol_ratio", "ma20_dist", "ma60_dist",
+              "foreign1", "foreign5", "trust1", "trust5", "dealer5", "margin_chg", "margin_bal",
+              "pe", "yield", "pb"]
 
 
 def watchlist_rows(wl: pd.DataFrame, df: pd.DataFrame, hits: dict[str, list[str]]) -> list[dict]:

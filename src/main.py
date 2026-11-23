@@ -3,6 +3,7 @@
 用法：
     python -m src.main                 # 以台北時間「今天」執行
     python -m src.main --date 2026-11-17
+    python -m src.main --latest        # 以最近一個已有資料的交易日重算（儀表板改設定後用，週末也可）
 """
 from __future__ import annotations
 
@@ -13,7 +14,7 @@ from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
 
-from . import analysis, store, twse
+from . import analysis, store, tpex, twse
 
 TPE = timezone(timedelta(hours=8))
 
@@ -29,11 +30,7 @@ def load_cfg() -> dict:
 def save_quotes(d: date, quotes: pd.DataFrame, market: dict) -> None:
     ds = d.isoformat()
     store.save_day(store.PRICES, ds, quotes)
-    old = store.load_market()
-    prev = old[old["date"] == ds].to_dict("records")
-    row = prev[0] if prev else {}
-    row.update({"date": ds, **{k: market.get(k) for k in ("taiex", "taiex_change", "taiex_change_pct", "value")}})
-    store.upsert_market(row)
+    store.update_market(ds, {k: market.get(k) for k in ("taiex", "taiex_change", "taiex_change_pct", "value")})
 
 
 def backfill(target: date, cfg: dict, warnings: list[str]) -> None:
@@ -77,10 +74,17 @@ def backfill(target: date, cfg: dict, warnings: list[str]) -> None:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", help="YYYY-MM-DD，預設為台北時間今天")
+    ap.add_argument("--latest", action="store_true", help="用最近一個已有資料的交易日重算")
     args = ap.parse_args(argv)
 
     cfg = load_cfg()
-    target = date.fromisoformat(args.date) if args.date else datetime.now(TPE).date()
+    if args.date:
+        target = date.fromisoformat(args.date)
+    elif args.latest and store.dates_in(store.PRICES):
+        target = date.fromisoformat(store.dates_in(store.PRICES)[-1])
+        log(f"重算模式：使用最近交易日 {target}")
+    else:
+        target = datetime.now(TPE).date()
     ds = target.isoformat()
     warnings: list[str] = []
 
@@ -109,12 +113,22 @@ def main(argv=None) -> int:
         warnings.append("今日三大法人個股資料尚未公布，動能型的法人條件以前一日為準")
     try:
         mi = twse.fetch_market_institutional(target)
-        row = store.load_market().set_index("date").loc[ds].to_dict()
-        row.update({"date": ds, "inst_foreign": mi["foreign"], "inst_trust": mi["trust"],
-                    "inst_dealer": mi["dealer"], "inst_total": mi["total"]})
-        store.upsert_market(row)
+        store.update_market(ds, {"inst_foreign": mi["foreign"], "inst_trust": mi["trust"],
+                                 "inst_dealer": mi["dealer"], "inst_total": mi["total"]})
     except twse.NoData:
         warnings.append("今日三大法人合計資料尚未公布")
+    margin = pd.DataFrame(columns=["code", "margin_prev", "margin_today"])
+    try:
+        mchg, margin = twse.fetch_margin(target)
+        store.update_market(ds, {"margin_chg": mchg})
+    except twse.NoData:
+        warnings.append("今日上市融資資料尚未公布")
+
+    # 2b. 上櫃大盤數據（失敗不中斷）
+    tp, tw = tpex.market_summary(target, log=log)
+    if tp:
+        store.update_market(ds, tp)
+    warnings.extend(tw)
 
     # 3. 補歷史 & 清理
     backfill(target, cfg, warnings)
@@ -124,7 +138,7 @@ def main(argv=None) -> int:
     # 4. 計算與篩選
     prices = store.load_days(store.PRICES)
     inst = store.load_days(store.INST)
-    df = analysis.indicators(prices, inst, quotes, valuation, cfg)
+    df = analysis.indicators(prices, inst, quotes, valuation, cfg, margin)
     n_days = prices["date"].nunique()
     if n_days < cfg["growth"]["ma_days"]:
         warnings.append(f"歷史資料目前 {n_days} 個交易日，60 日均線相關數值需滿 60 天才會出現")
@@ -167,8 +181,10 @@ def main(argv=None) -> int:
         "warnings": warnings,
         "config": cfg,
         "market": {k: analysis._clean(mrow.get(k)) for k in store.MARKET_COLS if k != "date"},
-        "market_history": [{"date": r["date"], "taiex": analysis._clean(r["taiex"])} for _, r in hist.iterrows()],
+        "market_history": [{"date": r["date"], "taiex": analysis._clean(r.get("taiex")),
+                            "tpex_index": analysis._clean(r.get("tpex_index"))} for _, r in hist.iterrows()],
         "watchlist": analysis.watchlist_rows(store.load_watchlist(), df, hits),
+        "names": {c: n for c, n in zip(quotes["code"], quotes["name"])},
         "screens": [
             {
                 "key": k, "label": labels[k],
