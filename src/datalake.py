@@ -33,7 +33,13 @@ TABLES = ("prices", "inst", "valuation")
 BACKFILL_DAYS = 10          # 每次檢查最近幾個交易日有沒有缺
 TPEX_OPENAPI = "https://www.tpex.org.tw/openapi/v1"
 
-EVENT_COLS = ["date", "code", "market", "kind", "prev_close", "ref_price", "cash_div", "stock_div", "source"]
+EVENT_COLS = ["date", "code", "market", "kind", "prev_close", "ref_price", "cash_div", "stock_div",
+              "sub_ratio", "sub_price", "ref_source", "source"]
+WARRANT = re.compile(r"^[1-9]\d{5}$")   # 6 碼且非 00 開頭＝權證，不存
+
+
+def _drop_warrants(df: pd.DataFrame) -> pd.DataFrame:
+    return df[~df["code"].str.match(WARRANT)].reset_index(drop=True)
 
 
 def log(*a):
@@ -58,8 +64,8 @@ def _roc_date(s) -> str | None:
 
 
 def _is_mark(v) -> bool:
-    s = twse._TAG.sub("", str(v)).strip()
-    return bool(s) and not re.fullmatch(r"[+\-]?[\d.,]*", s)
+    t = twse._TAG.sub("", str(v)).strip()
+    return "X" in t.upper() or bool(re.search(r"[\u4e00-\u9fff]", t))
 
 
 def twse_day(d: date) -> dict[str, pd.DataFrame]:
@@ -78,6 +84,7 @@ def twse_day(d: date) -> dict[str, pd.DataFrame]:
         "open": num(r[io]), "high": num(r[ih]), "low": num(r[il]), "close": num(r[icl]),
         "volume": num(r[iv]), "value": num(r[ival]), "ex_mark": _is_mark(r[isg]),
     } for r in t["data"]])
+    out["prices"] = _drop_warrants(out["prices"])
     try:
         ins = twse.fetch_institutional(d)
         for k in ("foreign", "trust", "dealer", "total"):
@@ -109,6 +116,7 @@ def tpex_day(d: date) -> dict[str, pd.DataFrame]:
         "open": num(r[io]), "high": num(r[ih]), "low": num(r[il]), "close": num(r[icl]),
         "volume": num(r[iv]), "value": num(r[ival]), "ex_mark": _is_mark(r[ich]),
     } for r in t["data"]])
+    out["prices"] = _drop_warrants(out["prices"])
     try:
         out["inst"] = tpex.fetch_institutional(d).assign(date=ds, market="tpex")  # 已是股
     except Exception as e:  # noqa: BLE001
@@ -129,34 +137,67 @@ def tpex_day(d: date) -> dict[str, pd.DataFrame]:
     return out
 
 
+def _ev(**kw) -> dict:
+    row = {c: float("nan") for c in EVENT_COLS}
+    row.update(kw)
+    return row
+
+
 def twse_events(start: date, end: date) -> pd.DataFrame:
-    """上市除權除息計算結果表（可查區間）。"""
+    """上市除權除息計算結果表（官方參考價，可查區間）。"""
     resp = twse.get_json("exRight/TWT49U", {"startDate": twse.ymd(start), "endDate": twse.ymd(end)})
     t = _find_table(resp, "股票代號", "參考價")
     if t is None:
         return pd.DataFrame(columns=EVENT_COLS)
     f = [str(x) for x in t["fields"]]
     idt, ic = _col(f, "資料日期"), _col(f, "股票代號")
-    ipc, iref = _col(f, "除權息前收盤價"), _col(f, "除權息參考價")
-    ival, ikind = _col(f, "權值"), _col(f, "權/息")
-    return pd.DataFrame([{
-        "date": _roc_date(r[idt]), "code": str(r[ic]).strip(), "market": "twse", "kind": str(r[ikind]).strip(),
-        "prev_close": num(r[ipc]), "ref_price": num(r[iref]), "cash_div": float("nan"),
-        "stock_div": float("nan"), "source": "TWT49U",
-    } for r in t["data"]], columns=EVENT_COLS)
+    ipc, iref, ikind = _col(f, "除權息前收盤價"), _col(f, "除權息參考價"), _col(f, "權/息")
+    return pd.DataFrame([_ev(
+        date=_roc_date(r[idt]), code=str(r[ic]).strip(), market="twse", kind=str(r[ikind]).strip(),
+        prev_close=num(r[ipc]), ref_price=num(r[iref]), ref_source="official", source="TWT49U",
+    ) for r in t["data"]], columns=EVENT_COLS)
+
+
+def twse_notice() -> pd.DataFrame:
+    """上市除權除息預告表（OpenAPI，含近期已除與即將除權息；只有股利，參考價由程式計算）。"""
+    rows = twse.http_json("https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL", {})
+    return pd.DataFrame([_ev(
+        date=_roc_date(r.get("Date")), code=str(r.get("Code", "")).strip(), market="twse",
+        kind=str(r.get("Exdividend", "")).strip(), cash_div=num(r.get("CashDividend")),
+        stock_div=num(r.get("StockDividendRatio")), sub_ratio=num(r.get("SubscriptionRatio")),
+        sub_price=num(r.get("SubscriptionPricePerShare")), source="TWT48U",
+    ) for r in (rows if isinstance(rows, list) else [])], columns=EVENT_COLS)
 
 
 def tpex_events() -> pd.DataFrame:
-    """上櫃除權除息計算結果表（OpenAPI，只有最近一批，通常是下一個除權息日）。"""
+    """上櫃除權除息計算結果表（OpenAPI，只有最近一批）。"""
     rows = twse.http_json(f"{TPEX_OPENAPI}/tpex_exright_daily", {})
-    if not isinstance(rows, list):
-        return pd.DataFrame(columns=EVENT_COLS)
-    return pd.DataFrame([{
-        "date": _roc_date(r.get("Date")), "code": str(r.get("SecuritiesCompanyCode", "")).strip(), "market": "tpex",
-        "kind": str(r.get("ExRightsDiviend", "")).strip(),
-        "prev_close": num(r.get("ClosePriceBeforeExRightsDiviend")), "ref_price": num(r.get("ExRightsDiviendQuote")),
-        "cash_div": num(r.get("CashDividend")), "stock_div": num(r.get("StockDividend")), "source": "tpex_exright_daily",
-    } for r in rows], columns=EVENT_COLS)
+    return pd.DataFrame([_ev(
+        date=_roc_date(r.get("Date")), code=str(r.get("SecuritiesCompanyCode", "")).strip(), market="tpex",
+        kind=str(r.get("ExRightsDiviend", "")).strip(),
+        prev_close=num(r.get("ClosePriceBeforeExRightsDiviend")), ref_price=num(r.get("ExRightsDiviendQuote")),
+        cash_div=num(r.get("CashDividend")), stock_div=num(r.get("StockDividend")),
+        ref_source="official", source="tpex_exright_daily",
+    ) for r in (rows if isinstance(rows, list) else [])], columns=EVENT_COLS)
+
+
+def tpex_notice() -> pd.DataFrame:
+    """上櫃除權除息預告表（OpenAPI，含近期與即將除權息）。"""
+    rows = twse.http_json(f"{TPEX_OPENAPI}/tpex_exright_prepost", {})
+    return pd.DataFrame([_ev(
+        date=_roc_date(r.get("ExRrightsExDividendDate")), code=str(r.get("SecuritiesCompanyCode", "")).strip(),
+        market="tpex", kind=str(r.get("ExRrightsExDividend", "")).strip(), cash_div=num(r.get("CashDividend")),
+        stock_div=num(r.get("StockDividendRatio")), sub_ratio=num(r.get("SubscriptionRatioToNewSharesIssued")),
+        sub_price=num(r.get("SubscriptionPricePerShare")), source="tpex_exright_prepost",
+    ) for r in (rows if isinstance(rows, list) else [])], columns=EVENT_COLS)
+
+
+def calc_ref(prev_close, cash, stock, sub_ratio, sub_price) -> float:
+    """除權息參考價 =（前日收盤 − 現金股利 ＋ 現增認購價 × 現增比率）÷（1 ＋ 無償配股率 ＋ 現增比率）。"""
+    z = lambda v: 0.0 if v is None or pd.isna(v) else float(v)  # noqa: E731
+    if prev_close is None or pd.isna(prev_close) or prev_close <= 0:
+        return float("nan")
+    return (prev_close - z(cash) + z(sub_price) * z(sub_ratio)) / (1 + z(stock) + z(sub_ratio))
 
 
 # ---------------------------------------------------------------- 寫入
@@ -176,6 +217,13 @@ class Lake:
             return ds in set(pd.read_parquet(month, columns=["date"])["date"])
         return False
 
+    def needs_rebuild(self, ds: str) -> bool:
+        """早期版本的日檔含權證、不比價註記判斷也較寬，偵測到就重抓一次。"""
+        p = self.day_path("prices", ds)
+        if not p.exists():
+            return False
+        return bool(pd.read_parquet(p, columns=["code"])["code"].str.match(WARRANT).any())
+
     def write_day(self, table: str, ds: str, df: pd.DataFrame) -> None:
         p = self.day_path(table, ds)
         p.parent.mkdir(parents=True, exist_ok=True)
@@ -187,16 +235,75 @@ class Lake:
         p = self.root / "events" / "adjust.parquet"
         p.parent.mkdir(parents=True, exist_ok=True)
         ev = ev.dropna(subset=["date"])
-        ev = ev[ev["code"] != ""]
-        old = pd.read_parquet(p) if p.exists() else pd.DataFrame(columns=EVENT_COLS)
+        ev = ev[(ev["code"] != "") & ~ev["code"].str.match(WARRANT)]
+        old = self.events()
         n0 = len(old)
-        allev = pd.concat([old, ev], ignore_index=True).drop_duplicates(["date", "code", "market"], keep="last")
-        allev.sort_values(["date", "code"]).to_parquet(p, index=False, compression="zstd")
-        return len(allev) - n0
+        key = ["date", "code", "market"]
+        allev = pd.concat([old, ev], ignore_index=True)
+        # 官方計算結果排前面，groupby.first() 會優先取到它的參考價，股利欄再由預告表補
+        allev["_rank"] = (allev["ref_source"] != "official").astype(int)
+        allev = allev.sort_values(key + ["_rank"]).drop(columns="_rank")
+        merged = allev.groupby(key, as_index=False).first()
+        srcs = allev.groupby(key)["source"].apply(lambda x: "+".join(sorted(set("+".join(x.dropna()).split("+")) - {""})))
+        merged["source"] = merged.set_index(key).index.map(srcs)
+        merged[EVENT_COLS].sort_values(key).to_parquet(p, index=False, compression="zstd")
+        return len(merged) - n0
+
+    def fill_refs(self) -> int:
+        """沒有官方參考價的事件：等除權息日前一天的收盤價寫進資料庫後，用公式算出參考價。"""
+        ev = self.events()
+        need = ev["ref_price"].isna()
+        if not need.any():
+            return 0
+        n = 0
+        for i in ev.index[need]:
+            ds, code = ev.at[i, "date"], ev.at[i, "code"]
+            if not self.has_day("prices", ds):   # 除權息日還沒到（或還沒寫入）就先不算
+                continue
+            prev = self.prev_close(code, ds)
+            if prev is None:
+                continue
+            ev.at[i, "prev_close"] = prev
+            ev.at[i, "ref_price"] = calc_ref(prev, ev.at[i, "cash_div"], ev.at[i, "stock_div"],
+                                             ev.at[i, "sub_ratio"], ev.at[i, "sub_price"])
+            ev.at[i, "ref_source"] = "computed"
+            n += 1
+        ev.to_parquet(self.root / "events" / "adjust.parquet", index=False, compression="zstd")
+        return n
+
+    def prev_close(self, code: str, ds: str) -> float | None:
+        """ds 之前最後一個有收盤價的交易日收盤（只往前找 10 天）。"""
+        d = date.fromisoformat(ds)
+        for k in range(1, 11):
+            x = (d - timedelta(days=k)).isoformat()
+            p = self.day_path("prices", x)
+            month = self.root / "prices" / f"{x[:7]}.parquet"
+            if p.exists():
+                df = pd.read_parquet(p, columns=["code", "close"])
+            elif month.exists():
+                df = pd.read_parquet(month, columns=["date", "code", "close"])
+                df = df[df["date"] == x]
+            else:
+                continue
+            if df.empty:
+                continue
+            v = df.loc[df["code"] == code, "close"]
+            return float(v.iloc[0]) if len(v) and pd.notna(v.iloc[0]) else None
+        return None
 
     def events(self) -> pd.DataFrame:
         p = self.root / "events" / "adjust.parquet"
-        return pd.read_parquet(p) if p.exists() else pd.DataFrame(columns=EVENT_COLS)
+        if not p.exists():
+            return pd.DataFrame(columns=EVENT_COLS)
+        ev = pd.read_parquet(p)
+        for c in EVENT_COLS:
+            if c not in ev.columns:
+                ev[c] = float("nan")
+        # 舊版沒有 ref_source：官方計算結果表來的參考價補標 official
+        ev["ref_source"] = ev["ref_source"].astype(object)
+        old = ev["ref_source"].isna() & ev["ref_price"].notna() & ev["source"].astype(str).str.contains("TWT49U|exright_daily")
+        ev.loc[old, "ref_source"] = "official"
+        return ev[EVENT_COLS]
 
     def compact(self, today: date) -> list[str]:
         """把已過完月份的日檔合併成月檔。"""
@@ -281,7 +388,7 @@ def main(argv=None) -> int:
     days = sorted(set(known[-BACKFILL_DAYS:]) | ({target.isoformat()} if target.weekday() < 5 else set()))
     written = []
     for ds in days:
-        if lake.has_day("prices", ds):
+        if lake.has_day("prices", ds) and not lake.needs_rebuild(ds):
             continue
         try:
             if update_day(lake, date.fromisoformat(ds), warnings):
@@ -291,17 +398,24 @@ def main(argv=None) -> int:
         except Exception as e:  # noqa: BLE001
             warnings.append(f"{ds} 寫入失敗：{e}")
 
-    # 除權息事件：上市查最近 30 天（含未來 7 天已公布的計算結果），上櫃取 OpenAPI 最新一批
+    # 除權息事件：官方計算結果（有參考價）＋預告表（有股利，參考價自己算），四個來源互補
+    sources = [
+        ("上市除權息計算結果", lambda: twse_events(target - timedelta(days=30), target + timedelta(days=7))),
+        ("上市除權息預告", twse_notice),
+        ("上櫃除權息計算結果", tpex_events),
+        ("上櫃除權息預告", tpex_notice),
+    ]
+    for label, fn in sources:
+        try:
+            df = fn()
+            n = lake.upsert_events(df)
+            log(f"{label}：{len(df)} 筆，新增事件 {n} 筆")
+        except Exception as e:  # noqa: BLE001
+            warnings.append(f"{label}抓取失敗：{e}")
     try:
-        n = lake.upsert_events(twse_events(target - timedelta(days=30), target + timedelta(days=7)))
-        log(f"上市除權息事件新增 {n} 筆")
+        log(f"計算參考價 {lake.fill_refs()} 筆")
     except Exception as e:  # noqa: BLE001
-        warnings.append(f"上市除權息事件抓取失敗：{e}")
-    try:
-        n = lake.upsert_events(tpex_events())
-        log(f"上櫃除權息事件新增 {n} 筆")
-    except Exception as e:  # noqa: BLE001
-        warnings.append(f"上櫃除權息事件抓取失敗：{e}")
+        warnings.append(f"計算參考價失敗：{e}")
 
     check_marks(lake, days, warnings)
     for m in lake.compact(today):

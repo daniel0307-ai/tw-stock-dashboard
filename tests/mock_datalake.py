@@ -27,6 +27,15 @@ def fake(url, params):
         return [{"Date": "1151120", "SecuritiesCompanyCode": "3100", "CompanyName": "櫃買股00",
                  "ClosePriceBeforeExRightsDiviend": "50.00", "ExRightsDiviendQuote": "49.00", "StockDividend": "0.000000",
                  "CashDividend": "1.000000", "ExRightsDiviend": "除息"}]
+    if url.endswith("TWT48U_ALL"):
+        return [{"Date": "1151118", "Code": "2317", "Name": "鴻海", "Exdividend": "息", "StockDividendRatio": "",
+                 "SubscriptionRatio": "", "SubscriptionPricePerShare": "", "CashDividend": "2.000000"},
+                {"Date": "1151119", "Code": "2330", "Name": "台積電", "Exdividend": "息", "CashDividend": "5.000000"},
+                {"Date": "1151202", "Code": "2412", "Name": "中華電", "Exdividend": "息", "CashDividend": "1.000000"}]
+    if url.endswith("tpex_exright_prepost"):
+        return [{"ExRrightsExDividendDate": "1151117", "SecuritiesCompanyCode": "3111", "CompanyName": "櫃買股01",
+                 "ExRrightsExDividend": "除權", "StockDividendRatio": "0.10000000", "SubscriptionRatioToNewSharesIssued": "0",
+                 "SubscriptionPricePerShare": "0", "CashDividend": "0.50000000"}]
     if url.endswith("peQryDate"):
         return {"stat": "ok", "tables": [{"fields": ["股票代號", "名稱", "本益比", "每股股利", "殖利率(%)", "股價淨值比"],
                 "data": [[c, n, "15.5", "1.0", "3.2", "1.8"] for c, n in mock_run.TPEX_CODES]}]}
