@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-23 10:01",
+ "generated_at": "2026-11-23 10:14",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -368,7 +368,7 @@
   {
    "code": "2330",
    "name": "台積電",
-   "group": "",
+   "group": "持股",
    "note": "",
    "status": "ok",
    "close": 2000.0,
