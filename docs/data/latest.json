@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-23 10:14",
+ "generated_at": "2026-11-23 10:38",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -52,6 +52,7 @@
   "inst_dealer": -34083240120.0,
   "inst_total": -50940775695.0,
   "margin_chg": -49141093000.0,
+  "margin_bal": 435227267000.0,
   "tpex_index": 263.31,
   "tpex_change": -22.02,
   "tpex_change_pct": -7.72,
@@ -60,7 +61,8 @@
   "tpex_inst_trust": 550578013.65,
   "tpex_inst_dealer": 3766304123.62,
   "tpex_inst_total": 13937907620.11,
-  "tpex_margin_chg": -12388547080.0
+  "tpex_margin_chg": -12388547080.0,
+  "tpex_margin_bal": 175285690250.0
  },
  "market_history": [
   {
@@ -485,6 +487,9 @@
    "pb": 7.69,
    "hits": []
   }
+ ],
+ "groups": [
+  "持股"
  ],
  "names": {
   "00400A": "主動國泰動能高息",
