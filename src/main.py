@@ -14,7 +14,7 @@ from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
 
-from . import analysis, store, tpex, twse
+from . import analysis, store, taifex, tpex, twse
 
 TPE = timezone(timedelta(hours=8))
 
@@ -129,6 +129,12 @@ def main(argv=None) -> int:
     if tp:
         store.update_market(ds, tp)
     warnings.extend(tw)
+
+    # 2c. 期貨（台指期、法人未平倉、P/C 比；失敗不中斷）
+    fu, fw = taifex.market_summary(target, market.get("taiex"), log=log)
+    if fu:
+        store.update_market(ds, fu)
+    warnings.extend(fw)
 
     # 3. 補歷史 & 清理
     backfill(target, cfg, warnings)

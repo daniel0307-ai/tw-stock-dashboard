@@ -21,7 +21,14 @@ MARKET_COLS = ["date", "taiex", "taiex_change", "taiex_change_pct", "value",
                "inst_foreign", "inst_trust", "inst_dealer", "inst_total", "margin_chg", "margin_bal",
                "tpex_index", "tpex_change", "tpex_change_pct", "tpex_value",
                "tpex_inst_foreign", "tpex_inst_trust", "tpex_inst_dealer", "tpex_inst_total", "tpex_margin_chg",
-               "tpex_margin_bal"]
+               "tpex_margin_bal",
+               "fut_month", "fut_close", "fut_change", "fut_change_pct", "fut_oi_total", "fut_basis",
+               "mtx_month", "mtx_close", "mtx_change", "mtx_change_pct", "mtx_oi_total",
+               "mtx_retail_ratio", "mtx_retail_net", "mtx_retail_ratio_chg",
+               "tmf_month", "tmf_close", "tmf_change", "tmf_change_pct", "tmf_oi_total",
+               "tmf_retail_ratio", "tmf_retail_net", "tmf_retail_ratio_chg",
+               "fut_foreign_oi", "fut_foreign_oi_chg", "fut_trust_oi", "fut_trust_oi_chg",
+               "fut_dealer_oi", "fut_dealer_oi_chg", "pc_ratio", "pc_ratio_chg"]
 
 
 def dates_in(folder: Path) -> list[str]:

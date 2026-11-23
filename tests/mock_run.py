@@ -149,6 +149,53 @@ def fake(url, params):
 
 
 twse.http_json = fake
+
+
+FUT_SCALE = {"TX": (1.0, 90000), "MTX": (1.0, 60000), "TMF": (1.0, 40000)}   # (價格比例, 近月未平倉量基準)
+INST_BASE = {"TXF": (3000, 25000, -30000), "MXF": (-1500, 800, -4200), "TMF": (-300, 0, -900)}  # 自營、投信、外資
+
+
+def fake_post(url, data, encoding="cp950"):
+    """期交所 CSV 模擬：台指期／小台／微台行情（含多日）、三大法人未平倉、P/C 比。"""
+    end = date(*map(int, data["queryEndDate"].split("/")))
+    start = date(*map(int, data["queryStartDate"].split("/")))
+    days = [x for x in DAYS if start <= x <= end]
+    if not days:
+        return "查無資料"
+    if url.endswith("futDataDown"):
+        code = data["commodity_id"]
+        _, oi0 = FUT_SCALE[code]
+        head = "交易日期,契約,到期月份(週別),開盤價,最高價,最低價,收盤價,漲跌價,漲跌%,成交量,結算價,未沖銷契約數,最後最佳買價,最後最佳賣價,歷史最高價,歷史最低價,是否因訊息面暫停交易,交易時段,價差對單式委託成交量"
+        out = [head]
+        for x in days:
+            i = IDX[x]
+            tx = TAIEX[i] + 35
+            ch = TAIEX[i] - TAIEX[i - 1]
+            def row(m, px, oi, sess):
+                return f"{x:%Y/%m/%d},{code},{m},1,1,1,{px:.0f},{ch:.0f},{ch / TAIEX[i - 1] * 100:.2f}%,9876,{px:.0f},{oi},1,1,1,1,,{sess},0"
+            near_oi = oi0 + (i % 5) * 1000
+            out += [row("202612", tx, near_oi, "一般"), row("202612/202701", 40, "-", "一般"), row("202701", tx + 20, 5000, "一般"),
+                    row("202611W4", tx - 5, 3000, "一般"), row("202612", tx + 60, "-", "盤後")]
+        return "\n".join(out)
+    if url.endswith("futContractsDateDown"):
+        code = data["commodityId"]
+        head = "日期,商品名稱,身份別,多方交易口數,多方交易契約金額(千元),空方交易口數,空方交易契約金額(千元),多空交易口數淨額,多空交易契約金額淨額(千元),多方未平倉口數,多方未平倉契約金額(千元),空方未平倉口數,空方未平倉契約金額(千元),多空未平倉口數淨額,多空未平倉契約金額淨額(千元)"
+        out = [head]
+        for x in days:
+            j = IDX[x]
+            for who, base in zip(("自營商", "投信", "外資"), INST_BASE[code]):
+                out.append(f"{x:%Y/%m/%d},商品,{who},1,1,1,1,1,1,1,1,1,1,{base + (j % 4) * 100},1")
+        return "\n".join(out)
+    if url.endswith("pcRatioDown"):
+        out = ["日期,賣權成交量,買權成交量,買賣權成交量比率%,賣權未平倉量,買權未平倉量,買賣權未平倉量比率%"]
+        out += [f"{x:%Y/%m/%d},1,1,100.0,1,1,{110 + IDX[x] % 7 * 2.5:.2f}" for x in days]
+        return "\n".join(out)
+    return "查無資料"
+
+
+twse.http_post_text = fake_post
+from src import taifex as _tf  # noqa: E402
+_tf.http_post_text = fake_post
 from src import tpex as _tp  # noqa: E402
 _tp.http_json = fake
 if __name__ == "__main__":

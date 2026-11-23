@@ -56,6 +56,27 @@ def http_json(url: str, params: dict) -> dict:
     raise RuntimeError(f"抓取失敗 {url} {params}: {last_err}")
 
 
+def http_post_text(url: str, data: dict, encoding: str = "cp950") -> str:
+    """POST 表單並回傳文字（期交所 CSV 下載用，Big5 編碼）。測試時會被替換成假資料。"""
+    global _last_request
+    last_err: Exception | None = None
+    headers = {**HEADERS, "Accept": "text/csv,text/plain,*/*", "Referer": "https://www.taifex.com.tw/",
+               "Content-Type": "application/x-www-form-urlencoded"}
+    for attempt in range(4):
+        wait = REQUEST_GAP - (time.time() - _last_request)
+        if wait > 0:
+            time.sleep(wait)
+        try:
+            _last_request = time.time()
+            r = requests.post(url, data=data, headers=headers, timeout=60)
+            r.raise_for_status()
+            return r.content.decode(encoding, errors="replace")
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            time.sleep(10 * (attempt + 1))
+    raise RuntimeError(f"抓取失敗 {url} {data}: {last_err}")
+
+
 # ---------------------------------------------------------------- 解析工具
 
 def _tables(resp: dict) -> list[dict]:
