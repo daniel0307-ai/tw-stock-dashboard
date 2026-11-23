@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-23 11:27",
+ "generated_at": "2026-11-23 11:28",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -424,7 +424,7 @@
   {
    "code": "0050",
    "name": "元大台灣50",
-   "group": "",
+   "group": "持股",
    "note": "",
    "status": "ok",
    "close": 84.45,
@@ -448,7 +448,7 @@
   {
    "code": "3711",
    "name": "日月光投控",
-   "group": "",
+   "group": "持股",
    "note": "",
    "status": "ok",
    "close": 457.0,
@@ -472,7 +472,7 @@
   {
    "code": "2308",
    "name": "台達電",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 900.0,
@@ -496,7 +496,7 @@
   {
    "code": "8046",
    "name": "南電",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 629.0,
@@ -520,7 +520,7 @@
   {
    "code": "2327",
    "name": "國巨*",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 296.0,
@@ -544,7 +544,7 @@
   {
    "code": "3189",
    "name": "景碩",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 470.0,
@@ -568,7 +568,7 @@
   {
    "code": "3037",
    "name": "欣興",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 537.0,
@@ -592,7 +592,7 @@
   {
    "code": "2492",
    "name": "華新科",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 187.5,
@@ -616,7 +616,7 @@
   {
    "code": "3017",
    "name": "奇鋐",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 2205.0,
@@ -640,7 +640,7 @@
   {
    "code": "3481",
    "name": "群創",
-   "group": "",
+   "group": "AI",
    "note": "",
    "status": "ok",
    "close": 29.95,
@@ -663,7 +663,8 @@
   }
  ],
  "groups": [
-  "持股"
+  "持股",
+  "AI"
  ],
  "names": {
   "00400A": "主動國泰動能高息",
