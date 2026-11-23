@@ -18,9 +18,10 @@ for p in (PRICES, INST):
     p.mkdir(parents=True, exist_ok=True)
 
 MARKET_COLS = ["date", "taiex", "taiex_change", "taiex_change_pct", "value",
-               "inst_foreign", "inst_trust", "inst_dealer", "inst_total", "margin_chg",
+               "inst_foreign", "inst_trust", "inst_dealer", "inst_total", "margin_chg", "margin_bal",
                "tpex_index", "tpex_change", "tpex_change_pct", "tpex_value",
-               "tpex_inst_foreign", "tpex_inst_trust", "tpex_inst_dealer", "tpex_inst_total", "tpex_margin_chg"]
+               "tpex_inst_foreign", "tpex_inst_trust", "tpex_inst_dealer", "tpex_inst_total", "tpex_margin_chg",
+               "tpex_margin_bal"]
 
 
 def dates_in(folder: Path) -> list[str]:
@@ -97,6 +98,22 @@ def replace_picks(d: str, picks: pd.DataFrame) -> None:
     if not picks.empty:
         p = picks if p.empty else pd.concat([p, picks], ignore_index=True)
     p.sort_values(["date", "strategy", "code"]).to_csv(PICKS, index=False)
+
+
+def load_groups() -> list[str]:
+    """分組清單（依 config/groups.json 的順序），再補上自選股裡出現但清單沒有的分組。"""
+    import json
+    groups: list[str] = []
+    f = CONFIG / "groups.json"
+    if f.exists():
+        try:
+            groups = [str(g).strip() for g in json.loads(f.read_text(encoding="utf-8")).get("groups", []) if str(g).strip()]
+        except (ValueError, AttributeError):
+            groups = []
+    for g in load_watchlist()["group"]:
+        if g and g not in groups:
+            groups.append(g)
+    return groups
 
 
 def load_watchlist() -> pd.DataFrame:

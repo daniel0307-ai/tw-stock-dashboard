@@ -132,6 +132,7 @@ def market_summary(d: date, log=print) -> tuple[dict, list[str]]:
             m = fetch_margin(d).set_index("code")
             px = close.reindex(m.index)
             out["tpex_margin_chg"] = float(((m["margin_today"] - m["margin_prev"]) * 1000 * px).sum())
+            out["tpex_margin_bal"] = float((m["margin_today"] * 1000 * px).sum())
         except Exception as e:  # noqa: BLE001
             warns.append("上櫃融資暫無資料")
             log(f"[櫃買] 融資：{e}")

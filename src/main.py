@@ -119,8 +119,8 @@ def main(argv=None) -> int:
         warnings.append("今日三大法人合計資料尚未公布")
     margin = pd.DataFrame(columns=["code", "margin_prev", "margin_today"])
     try:
-        mchg, margin = twse.fetch_margin(target)
-        store.update_market(ds, {"margin_chg": mchg})
+        msum, margin = twse.fetch_margin(target)
+        store.update_market(ds, msum)
     except twse.NoData:
         warnings.append("今日上市融資資料尚未公布")
 
@@ -184,6 +184,7 @@ def main(argv=None) -> int:
         "market_history": [{"date": r["date"], "taiex": analysis._clean(r.get("taiex")),
                             "tpex_index": analysis._clean(r.get("tpex_index"))} for _, r in hist.iterrows()],
         "watchlist": analysis.watchlist_rows(store.load_watchlist(), df, hits),
+        "groups": store.load_groups(),
         "names": {c: n for c, n in zip(quotes["code"], quotes["name"])},
         "screens": [
             {

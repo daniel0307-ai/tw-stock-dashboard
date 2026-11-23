@@ -6,7 +6,7 @@
 <script>
   try { const t = localStorage.getItem("twdash.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
 </script>
-<title>台股每日儀表板</title>
+<title>台股儀表板</title>
 <style>
 :root {
   color-scheme: light;
@@ -148,7 +148,17 @@ legend label { font-weight: 400; font-size: 13px; color: var(--text-secondary); 
 .edit-table td { padding: 4px; border: 0; }
 .edit-table td:first-child { width: 110px; }
 .edit-table td.nm { color: var(--text-secondary); font-size: 13px; width: 120px; white-space: normal; }
-.edit-table td.gp { width: 100px; }
+.edit-table td.gp { width: 120px; }
+.edit-table select { width: 100%; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 6px; padding: 6px 6px; font: inherit; font-size: 13px; }
+.grp-mgr { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+.grp-mgr-head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; font-size: 14px; }
+.grp-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gitem { display: inline-flex; align-items: center; border: 1px solid var(--border); background: var(--surface-1); border-radius: 8px; padding: 2px 2px 2px 4px; }
+.gitem input { border: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 13px; width: 6.5em; padding: 3px 4px; }
+.gitem input:focus { outline: 2px solid var(--accent); border-radius: 4px; }
+.gitem input.err { outline: 2px solid var(--up); border-radius: 4px; }
+.gitem button { border: 0; background: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 0 6px; line-height: 1; }
+.gitem button:hover { color: var(--up); }
 dialog#dlgWatch { width: min(720px, calc(100vw - 24px)); }
 .steps { margin: 6px 0 12px; padding-left: 20px; font-size: 13px; line-height: 1.8; }
 .steps code, .note code { background: var(--surface-2); padding: 0 4px; border-radius: 4px; }
@@ -221,7 +231,6 @@ header .actions { display: flex; gap: 8px; align-items: center; }
 .pager .info { margin-right: auto; }
 .pager button { min-width: 32px; padding: 4px 8px; }
 .pager button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-.grp { display: inline-block; font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
 
 /* 固定左側欄（股票、收盤、漲跌幅） */
 td.fx, th.fx { position: sticky; z-index: 1; background: var(--surface-1); }
@@ -237,7 +246,6 @@ td.fx-last, th.fx-last { border-right: 1px solid var(--grid); }
   th.c-close, th.c-chg { min-width: 62px; width: 62px; }
   td.c-stock { white-space: normal; line-height: 1.35; }
   td.c-stock .code { display: block; margin: 0; font-size: 12px; }
-  td.c-stock .grp { margin-left: 0; }
   .pager .info { flex-basis: 100%; }
   .filters input[type=search] { margin-left: 0; flex: 1 1 100%; }
   header .actions { margin-left: 0; width: 100%; justify-content: space-between; }
@@ -248,7 +256,7 @@ td.fx-last, th.fx-last { border-right: 1px solid var(--grid); }
 <body>
 <div class="wrap">
   <header>
-    <h1>台股每日儀表板</h1>
+    <h1>台股儀表板</h1>
     <span class="meta" id="meta">載入中…</span>
     <div class="actions">
       <div class="seg" id="themeSeg" role="group" aria-label="主題">
@@ -342,10 +350,13 @@ td.fx-last, th.fx-last { border-right: 1px solid var(--grid); }
 <dialog id="dlgWatch">
   <div class="dlg-head"><h3>編輯自選股</h3><button class="x" data-close aria-label="關閉">×</button></div>
   <div class="dlg-body">
+    <div class="grp-mgr">
+      <div class="grp-mgr-head"><b>分組</b><span class="note">直接修改名稱即可改名；刪除分組後，該組股票會變成「未分組」</span></div>
+      <div class="grp-list" id="gList"></div>
+    </div>
     <table class="edit-table"><thead><tr><th class="l">代號</th><th class="l">名稱</th><th class="l">分組</th><th class="l">備註</th><th></th></tr></thead><tbody id="wRows"></tbody></table>
-    <datalist id="groupList"></datalist>
     <button class="btn" id="wAdd" type="button" style="margin-top:8px">＋ 新增一檔</button>
-    <p class="note">輸入代號會自動帶出名稱。分組可自訂（例如：持股、觀察、ETF），留空為「未分組」。上櫃股票可以加入，但目前不會有資料。</p>
+    <p class="note">輸入代號會自動帶出名稱。上櫃股票可以加入，但目前不會有資料。</p>
     <div class="msg" id="wMsg"></div>
   </div>
   <div class="dlg-foot">
@@ -512,7 +523,8 @@ function renderMarket(mk) {
     <div class="kpi"><div class="label">${idxLabel}</div><div class="value">${fmt(mk[p + "index"] ?? mk[p === "" ? "taiex" : "tpex_index"])}</div>
       <div class="sub">${signed(mk[p === "" ? "taiex_change" : "tpex_change"])}　${signed(mk[p === "" ? "taiex_change_pct" : "tpex_change_pct"], 2, "%")}</div></div>
     <div class="kpi"><div class="label">成交金額</div><div class="value">${yi(mk[p === "" ? "value" : "tpex_value"])}</div><div class="sub muted">億元</div></div>
-    ${amt("融資增減", mk[p === "" ? "margin_chg" : "tpex_margin_chg"], est)}
+    <div class="kpi"><div class="label">融資餘額</div><div class="value">${yi(mk[p + "margin_bal"])}</div>
+      <div class="sub muted">億元${est ? "（估）" : ""}　增減 ${signedInt(mk[p + "margin_chg"] == null ? null : mk[p + "margin_chg"] / 1e8)}</div></div>
     ${amt("外資買賣超", mk[p + "inst_foreign"], est)}
     ${amt("投信買賣超", mk[p + "inst_trust"], est)}
     ${amt("自營商買賣超", mk[p + "inst_dealer"], est)}`;
@@ -529,7 +541,6 @@ const okRow = r => r.status === "ok";
 const UNGROUPED = "未分組";
 const W_COL = {
   stock: { key: "code", label: "股票", align: "l", cls: "c-stock", render: r => stockCell(r)
-    + (watchGroup === "__all" && r.group ? `<span class="grp">${esc(r.group)}</span>` : "")
     + (r.note ? `<div class="note">${esc(r.note)}</div>` : "") },
   close: { key: "close", label: "收盤", cls: "c-close", render: r => okRow(r) ? fmt(r.close) : `<span class="note" title="${esc(r.status)}">無資料</span>` },
   chg: { key: "chg_pct", label: "漲跌幅", cls: "c-chg", render: r => signed(r.chg_pct, 2, "%") },
@@ -563,10 +574,12 @@ function renderWatch() {
   $("#watchTabs").innerHTML = W_TABS.map(([k, l]) => `<button class="tab" type="button" aria-selected="${k === watchTab}" data-k="${k}">${l}</button>`).join("");
   $("#watchTabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { watchTab = b.dataset.k; renderWatch(); });
   // 分組 chips（有設定分組才顯示）
-  const groups = [...new Set(all.map(r => r.group || UNGROUPED))];
-  const hasGroups = all.some(r => r.group);
+  const defined = (DATA.groups && DATA.groups.length) ? DATA.groups : [...new Set(all.map(r => r.group).filter(Boolean))];
+  const groupOf = r => (r.group && defined.includes(r.group)) ? r.group : UNGROUPED;
+  const groups = [...defined, ...(all.some(r => groupOf(r) === UNGROUPED) ? [UNGROUPED] : [])];
+  const hasGroups = defined.length > 0;
   if (watchGroup !== "__all" && !groups.includes(watchGroup)) watchGroup = "__all";
-  $("#watchGroups").innerHTML = hasGroups ? [["__all", "全部", all.length], ...groups.map(g => [g, g, all.filter(r => (r.group || UNGROUPED) === g).length])]
+  $("#watchGroups").innerHTML = hasGroups ? [["__all", "全部", all.length], ...groups.map(g => [g, g, all.filter(r => groupOf(r) === g).length])]
     .map(([k, l, n]) => `<button class="chip" type="button" aria-pressed="${k === watchGroup}" data-g="${esc(k)}">${esc(l)}<span class="n">${n}</span></button>`).join("") : "";
   $("#watchGroups").querySelectorAll(".chip").forEach(b => b.onclick = () => { watchGroup = b.dataset.g; watchState.page = 1; renderWatch(); });
 
@@ -574,7 +587,7 @@ function renderWatch() {
   if (!all.length) { host.innerHTML = '<div class="status">尚未設定自選股，按右上角「編輯自選股」新增</div>'; return; }
   const q = $("#watchSearch").value.trim().toUpperCase();
   let rows = all;
-  if (watchGroup !== "__all") rows = rows.filter(r => (r.group || UNGROUPED) === watchGroup);
+  if (watchGroup !== "__all") rows = rows.filter(r => groupOf(r) === watchGroup);
   if ($("#watchHitOnly").checked) rows = rows.filter(r => r.hits && r.hits.length);
   if (q) rows = rows.filter(r => r.code.toUpperCase().includes(q) || (r.name || "").includes(q) || (r.note || "").includes(q));
   if (!rows.length) { host.innerHTML = '<div class="status">沒有符合條件的自選股</div>'; return; }
@@ -726,15 +739,20 @@ function needConn(afterOpen) {
   openConn("請先完成連線設定，儲存後再編輯一次。");
   return true;
 }
-/** 讀取 → 修改 → 寫回 → 觸發排程 */
-async function saveFile(path, transform, message, msgEl, btn) {
+/** 讀取 → 寫回（只寫有變動的檔案）→ 觸發一次排程。files = [[path, 內容或 (舊內容)=>新內容], ...] */
+async function saveFiles(files, message, msgEl, btn) {
   btn.disabled = true;
   showMsg(msgEl, "ok", "儲存中…");
   try {
-    const cur = await getFile(path);
-    const next = transform(cur.text);
-    if (next === cur.text) { showMsg(msgEl, "ok", "內容沒有變更。"); btn.disabled = false; return false; }
-    await putFile(path, next, cur.sha, message);
+    let changed = 0;
+    for (const [path, content] of files) {
+      const cur = await getFileOrNull(path);
+      const next = typeof content === "function" ? content(cur ? cur.text : null) : content;
+      if (cur && next === cur.text) continue;
+      await putFile(path, next, cur ? cur.sha : undefined, message);
+      changed++;
+    }
+    if (!changed) { showMsg(msgEl, "ok", "內容沒有變更。"); return false; }
     showMsg(msgEl, "ok", "已儲存，正在觸發排程重算…");
     let ran = true;
     try { await runWorkflow(); } catch (e) { ran = false; }
@@ -750,6 +768,7 @@ async function saveFile(path, transform, message, msgEl, btn) {
     btn.disabled = false;
   }
 }
+const saveFile = (path, transform, message, msgEl, btn) => saveFiles([[path, transform]], message, msgEl, btn);
 document.querySelectorAll("dialog [data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
 
 /* ---------- 連線設定 ---------- */
@@ -802,10 +821,13 @@ function parseCSV(text) {
   return rows;
 }
 const csvCell = (v) => /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+/* 編輯視窗內的分組模型：G = [{id, name}]，股票列以 id 對應，改名不影響已選的股票 */
+let G = [], gSeq = 0;
+const gOptions = (sel) => `<option value="">未分組</option>` + G.map(g => `<option value="${g.id}" ${g.id === sel ? "selected" : ""}>${esc(g.name)}</option>`).join("");
 function watchRowHtml(r = {}) {
   return `<tr><td><input class="w-code" value="${esc(r.code || "")}" placeholder="例 2330" maxlength="6"></td>
     <td class="nm"><input class="w-name" value="${esc(r.name || "")}" placeholder="名稱"></td>
-    <td class="gp"><input class="w-group" value="${esc(r.group || "")}" placeholder="未分組" list="groupList"></td>
+    <td class="gp"><select class="w-group" aria-label="分組">${gOptions(r.gid || "")}</select></td>
     <td><input class="w-note" value="${esc(r.note || "")}" placeholder="備註（選填）"></td>
     <td><button class="btn danger w-del" type="button" aria-label="刪除">刪除</button></td></tr>`;
 }
@@ -821,12 +843,39 @@ function bindWatchRows() {
     tr.querySelector(".w-del").onclick = () => tr.remove();
   });
 }
-function fillWatch(rows) {
-  const groups = [...new Set(["持股", "觀察", ...rows.map(r => r.group).filter(Boolean)])];
-  $("#groupList").innerHTML = groups.map(g => `<option value="${esc(g)}">`).join("");
-  const names = DATA.names || {};
-  rows = rows.map(r => ({ ...r, name: r.name || names[r.code] || "" }));
-  $("#wRows").innerHTML = rows.map(watchRowHtml).join(""); bindWatchRows();
+/** 分組變動後，更新每一列下拉選單（保留原本選擇；被刪的分組變回未分組） */
+function refreshGroupSelects() {
+  $("#wRows").querySelectorAll(".w-group").forEach(sel => {
+    const v = G.some(g => g.id === sel.value) ? sel.value : "";
+    sel.innerHTML = gOptions(v);
+  });
+}
+function renderGroupMgr() {
+  $("#gList").innerHTML = G.map(g => `<span class="gitem"><input value="${esc(g.name)}" data-id="${g.id}" maxlength="12" aria-label="分組名稱"><button type="button" data-del="${g.id}" title="刪除分組" aria-label="刪除分組">×</button></span>`).join("")
+    + `<button class="btn" id="gAdd" type="button">＋ 新增分組</button>`;
+  $("#gList").querySelectorAll("input").forEach(inp => inp.oninput = () => {
+    const g = G.find(x => x.id === inp.dataset.id); g.name = inp.value.trim(); inp.classList.remove("err");
+    $("#wRows").querySelectorAll(`.w-group option[value="${g.id}"]`).forEach(o => o.textContent = g.name || "（未命名）");
+  });
+  $("#gList").querySelectorAll("button[data-del]").forEach(b => b.onclick = () => {
+    const g = G.find(x => x.id === b.dataset.del);
+    const used = [...$("#wRows").querySelectorAll(".w-group")].filter(s => s.value === g.id).length;
+    if (used && !confirm(`「${g.name}」裡有 ${used} 檔股票，刪除後會變成未分組。確定刪除？`)) return;
+    G = G.filter(x => x.id !== g.id); renderGroupMgr(); refreshGroupSelects();
+  });
+  $("#gAdd").onclick = () => {
+    let n = 1; while (G.some(g => g.name === `新分組${n}`)) n++;
+    G.push({ id: "g" + (++gSeq), name: `新分組${n}` }); renderGroupMgr(); refreshGroupSelects();
+    const items = $("#gList").querySelectorAll(".gitem input"); const inp = items[items.length - 1]; inp.focus(); inp.select();
+  };
+}
+function fillWatch(rows, groupNames) {
+  const names = [...new Set([...(groupNames || []), ...rows.map(r => r.group).filter(Boolean)])];
+  gSeq = 0; G = names.map(n => ({ id: "g" + (++gSeq), name: n }));
+  const idOf = Object.fromEntries(G.map(g => [g.name, g.id]));
+  const nm = DATA.names || {};
+  $("#wRows").innerHTML = rows.map(r => watchRowHtml({ ...r, name: r.name || nm[r.code] || "", gid: idOf[r.group] || "" })).join("");
+  bindWatchRows(); renderGroupMgr();
 }
 /** 依表頭對應欄位，相容舊版（代號,名稱,備註）與新版（代號,名稱,分組,備註） */
 function csvToWatch(text) {
@@ -839,30 +888,44 @@ function csvToWatch(text) {
     code: r[ic].trim(), name: (r[inm] || "").trim(), group: ig >= 0 ? (r[ig] || "").trim() : "", note: ino >= 0 ? (r[ino] || "").trim() : "",
   }));
 }
+async function getFileOrNull(path) {
+  try { return await getFile(path); } catch (e) { if (e instanceof GhError && e.status === 404) return null; throw e; }
+}
 $("#btnEditWatch").onclick = async () => {
   if (needConn()) return;
   $("#wMsg").className = "msg";
-  fillWatch(DATA.watchlist.map(r => ({ code: r.code, name: r.name, group: r.group, note: r.note })));
+  fillWatch(DATA.watchlist.map(r => ({ code: r.code, name: r.name, group: r.group, note: r.note })), DATA.groups);
   $("#dlgWatch").showModal();
   try {  // 以 repo 上最新的清單為準
-    const f = await getFile("config/watchlist.csv");
-    fillWatch(csvToWatch(f.text));
+    const [f, gf] = await Promise.all([getFile("config/watchlist.csv"), getFileOrNull("config/groups.json")]);
+    let gs = [];
+    try { gs = gf ? (JSON.parse(gf.text).groups || []) : (DATA.groups || []); } catch { gs = DATA.groups || []; }
+    fillWatch(csvToWatch(f.text), gs);
   } catch (e) { showMsg($("#wMsg"), "err", ghErrText(e)); }
 };
 $("#wAdd").onclick = () => { $("#wRows").insertAdjacentHTML("beforeend", watchRowHtml()); bindWatchRows(); $("#wRows").lastElementChild.querySelector(".w-code").focus(); };
 $("#wSave").onclick = async () => {
-  const rows = [], seen = new Set(); let bad = false;
+  let bad = false; const seenG = new Set();
+  $("#gList").querySelectorAll(".gitem input").forEach(inp => {
+    const v = inp.value.trim();
+    const ok = v && v !== UNGROUPED && !seenG.has(v) && !/[,"]/.test(v);
+    inp.classList.toggle("err", !ok); if (!ok) bad = true; seenG.add(v);
+  });
+  if (bad) return showMsg($("#wMsg"), "err", "分組名稱不能空白、不能重複，也不能叫「未分組」或包含逗號、引號（紅框標示）。");
+  const nameOf = Object.fromEntries(G.map(g => [g.id, g.name]));
+  const rows = [], seen = new Set();
   $("#wRows").querySelectorAll("tr").forEach(tr => {
     const ci = tr.querySelector(".w-code"), code = ci.value.trim();
     const name = tr.querySelector(".w-name").value.trim(), note = tr.querySelector(".w-note").value.trim();
-    const group = tr.querySelector(".w-group").value.trim();
-    if (!code && !name && !note && !group) return;
+    const group = nameOf[tr.querySelector(".w-group").value] || "";
+    if (!code && !name && !note) return;
     if (!/^[0-9A-Z]{4,6}$/.test(code) || seen.has(code)) { ci.classList.add("err"); bad = true; return; }
-    seen.add(code); rows.push([code, name, group === UNGROUPED ? "" : group, note]);
+    seen.add(code); rows.push([code, name, group, note]);
   });
   if (bad) return showMsg($("#wMsg"), "err", "代號要是 4–6 碼英數字，且不能重複（紅框標示）。");
   const csv = "代號,名稱,分組,備註\n" + rows.map(r => r.map(csvCell).join(",")).join("\n") + "\n";
-  await saveFile("config/watchlist.csv", () => csv, "從儀表板更新自選股", $("#wMsg"), $("#wSave"));
+  const groupsJson = JSON.stringify({ groups: G.map(g => g.name) }, null, 2) + "\n";
+  await saveFiles([["config/watchlist.csv", csv], ["config/groups.json", groupsJson]], "從儀表板更新自選股與分組", $("#wMsg"), $("#wSave"));
 };
 
 /* ---------- 調整篩選條件 ---------- */
@@ -932,7 +995,7 @@ async function load() {
     if (!res.ok) throw new Error(res.status);
     DATA = await res.json();
   } catch (e) {
-    document.querySelector(".wrap").innerHTML = '<h1>台股每日儀表板</h1><div class="empty">還沒有資料。第一次排程執行完成後（約需 10 分鐘）重新整理即可。</div>';
+    document.querySelector(".wrap").innerHTML = '<h1>台股儀表板</h1><div class="empty">還沒有資料。第一次排程執行完成後（約需 10 分鐘）重新整理即可。</div>';
     return;
   }
   $("#meta").textContent = `資料日期 ${DATA.date}　·　更新於 ${DATA.generated_at}　·　歷史 ${DATA.history_days} 個交易日`;
