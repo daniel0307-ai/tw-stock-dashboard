@@ -102,11 +102,12 @@ def replace_picks(d: str, picks: pd.DataFrame) -> None:
 def load_watchlist() -> pd.DataFrame:
     f = CONFIG / "watchlist.csv"
     if not f.exists():
-        return pd.DataFrame(columns=["code", "name", "note"])
+        return pd.DataFrame(columns=["code", "name", "group", "note"])
     w = pd.read_csv(f, dtype=str).fillna("")
-    w = w.rename(columns={"代號": "code", "名稱": "name", "備註": "note"})
-    for c in ("code", "name", "note"):
+    w = w.rename(columns={"代號": "code", "名稱": "name", "分組": "group", "備註": "note"})
+    for c in ("code", "name", "group", "note"):
         if c not in w:
             w[c] = ""
     w["code"] = w["code"].str.strip()
-    return w[w["code"] != ""][["code", "name", "note"]].drop_duplicates("code")
+    w["group"] = w["group"].str.strip()
+    return w[w["code"] != ""][["code", "name", "group", "note"]].drop_duplicates("code")

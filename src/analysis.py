@@ -164,10 +164,10 @@ def watchlist_rows(wl: pd.DataFrame, df: pd.DataFrame, hits: dict[str, list[str]
         code = w["code"]
         if code in df.index:
             r = df.loc[code]
-            rec = {"code": code, "name": w["name"] or r["name"], "note": w["note"], "status": "ok"}
+            rec = {"code": code, "name": w["name"] or r["name"], "group": w["group"], "note": w["note"], "status": "ok"}
             rec.update({c: _clean(r.get(c)) for c in WATCH_COLS})
         else:
-            rec = {"code": code, "name": w["name"], "note": w["note"], "status": "無資料（可能為上櫃或代號錯誤）"}
+            rec = {"code": code, "name": w["name"], "group": w["group"], "note": w["note"], "status": "無資料（可能為上櫃或代號錯誤）"}
         rec["hits"] = hits.get(code, [])
         rows.append(rec)
     return rows
