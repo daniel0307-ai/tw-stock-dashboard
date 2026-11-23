@@ -198,6 +198,32 @@ from src import taifex as _tf  # noqa: E402
 _tf.http_post_text = fake_post
 from src import tpex as _tp  # noqa: E402
 _tp.http_json = fake
+# FinMind 月營收：一半股票營收逐年成長 30%，其餘持平
+import os  # noqa: E402
+import pandas as _pd  # noqa: E402
+from src.providers import finmind as _fm  # noqa: E402
+FM_CALLS = []
+
+
+def fake_fm(code, start_date):
+    FM_CALLS.append(code)
+    g = 1.3 if sum(map(ord, code)) % 2 == 0 else 1.0
+    y0, m0 = map(int, start_date[:7].split("-"))
+    rows = []
+    for i in range(30):
+        n = y0 * 12 + m0 - 2 + i  # 公布月的前一個月＝營收月
+        y, m = n // 12, n % 12 + 1
+        if f"{y:04d}-{m:02d}" > _fm.expected_latest_ym(END):
+            break
+        rows.append({"code": code, "ym": f"{y:04d}-{m:02d}", "revenue": 1e9 * g ** ((n - 24000) / 12)})
+    return _pd.DataFrame(rows, columns=["code", "ym", "revenue"])
+
+
+if os.environ.get("MOCK_FINMIND"):
+    os.environ["FINMIND_TOKEN"] = "mock"
+    _fm.fetch_one = fake_fm
+    _fm.REQUEST_GAP = 0
+
 if __name__ == "__main__":
     for ds in sys.argv[1:]:
         main.main(["--date", ds])

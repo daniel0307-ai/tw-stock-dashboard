@@ -15,6 +15,7 @@ from datetime import date, datetime, timedelta, timezone
 import pandas as pd
 
 from . import analysis, store, taifex, tpex, twse
+from .providers import finmind
 
 TPE = timezone(timedelta(hours=8))
 
@@ -157,6 +158,14 @@ def main(argv=None) -> int:
     if cfg["momentum"].get("enabled", True):
         results["momentum"] = analysis.screen_momentum(df, cfg)
     results["growth"], status["growth"] = analysis.screen_growth(df, cfg)
+    fs = finmind.last_stats
+    if fs:
+        log(f"[FinMind] 月營收查詢 {fs['calls']} 次，待補 {fs['remaining']} 檔")
+        if fs["remaining"]:
+            why = "FinMind 每小時額度已用完" if fs["quota_hit"] else "單次查詢上限"
+            warnings.append(f"成長型：月營收還有 {fs['remaining']} 檔未更新（{why}），下次排程會接著補，結果可能暫時不完整")
+        for e in fs["errors"]:
+            warnings.append(f"成長型：{e}")
 
     hits: dict[str, list[str]] = {}
     for key, r in results.items():

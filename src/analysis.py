@@ -107,7 +107,7 @@ def screen_growth(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, str]:
     if not c.get("enabled", True):
         return df.iloc[0:0], "已在設定檔關閉"
     if not finmind.token():
-        return df.iloc[0:0], "尚未啟用：需要 FinMind token（設定 GitHub Secret「FINMIND_TOKEN」並實作月營收抓取）"
+        return df.iloc[0:0], "尚未啟用：需要 FinMind token（設定 GitHub Secret「FINMIND_TOKEN」）"
     cand = df[_liquid(df, cfg) & (df["close"] > df["ma60"])]
     try:
         rev = finmind.get_monthly_revenue(cand.index.tolist())
@@ -117,10 +117,17 @@ def screen_growth(df: pd.DataFrame, cfg: dict) -> tuple[pd.DataFrame, str]:
         return df.iloc[0:0], f"月營收抓取失敗：{e}"
     rev = rev.sort_values(["code", "ym"])
     k = c["revenue_positive_months"]
+    # 最新一期太舊（例如額度用完還沒補到）就先不判斷，避免用過期營收選股
+    stale_before = finmind._ym_add(finmind.expected_latest_ym(pd.Timestamp.now(tz="Asia/Taipei").date()), -1)
     ok = []
     for code, g in rev.groupby("code"):
-        last = g.tail(k)
-        if len(last) == k and (last["yoy"] > 0).all() and last["yoy"].iloc[-1] > c["revenue_yoy_min"]:
+        last = g.dropna(subset=["revenue"]).tail(k)
+        if len(last) < k or last["ym"].iloc[-1] < stale_before:
+            continue
+        # 必須是連續 k 個月
+        if last["ym"].iloc[0] != finmind._ym_add(last["ym"].iloc[-1], -(k - 1)):
+            continue
+        if (last["yoy"] > 0).all() and last["yoy"].iloc[-1] > c["revenue_yoy_min"]:
             ok.append((code, last["yoy"].iloc[-1], last["ym"].iloc[-1]))
     if not ok:
         return df.iloc[0:0], ""
