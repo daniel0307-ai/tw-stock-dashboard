@@ -1,6 +1,6 @@
 {
  "date": "2026-11-20",
- "generated_at": "2026-11-23 11:28",
+ "generated_at": "2026-11-23 12:42",
  "history_days": 70,
  "warnings": [],
  "config": {
@@ -2681,7 +2681,8 @@
      "yield": 5.08,
      "pb": 0.6,
      "hits": [
-      "價值型"
+      "價值型",
+      "成長型"
      ]
     },
     {
@@ -2742,13 +2743,169 @@
   {
    "key": "growth",
    "label": "成長型",
-   "status": "尚未啟用：需要 FinMind token（設定 GitHub Secret「FINMIND_TOKEN」並實作月營收抓取）",
-   "count": 0,
-   "rows": []
+   "status": "",
+   "count": 10,
+   "rows": [
+    {
+     "code": "3701",
+     "name": "大眾控",
+     "close": 51.3,
+     "chg_pct": -9.84,
+     "volume": 1032.23,
+     "avg_vol20": 9413.9,
+     "ma60_dist": 0.8,
+     "rev_yoy": 93.95,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "6108",
+     "name": "競國",
+     "close": 34.45,
+     "chg_pct": -9.93,
+     "volume": 660.44,
+     "avg_vol20": 6217.32,
+     "ma60_dist": 23.04,
+     "rev_yoy": 86.67,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2466",
+     "name": "冠西電",
+     "close": 387.0,
+     "chg_pct": -4.21,
+     "volume": 352.35,
+     "avg_vol20": 2558.25,
+     "ma60_dist": 83.49,
+     "rev_yoy": 54.17,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "9933",
+     "name": "中鼎",
+     "close": 51.5,
+     "chg_pct": -9.01,
+     "volume": 25714.94,
+     "avg_vol20": 16950.63,
+     "ma60_dist": 16.2,
+     "rev_yoy": 53.86,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "3703",
+     "name": "欣陸",
+     "close": 20.65,
+     "chg_pct": -6.77,
+     "volume": 1772.43,
+     "avg_vol20": 2328.73,
+     "ma60_dist": 0.78,
+     "rev_yoy": 49.59,
+     "rev_ym": "2026-10",
+     "hits": [
+      "價值型",
+      "成長型"
+     ]
+    },
+    {
+     "code": "1416",
+     "name": "廣豐",
+     "close": 14.6,
+     "chg_pct": -9.32,
+     "volume": 8830.73,
+     "avg_vol20": 10608.13,
+     "ma60_dist": 10.56,
+     "rev_yoy": 45.46,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2355",
+     "name": "敬鵬",
+     "close": 48.75,
+     "chg_pct": -8.54,
+     "volume": 26308.1,
+     "avg_vol20": 26395.34,
+     "ma60_dist": 3.08,
+     "rev_yoy": 33.02,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "7765",
+     "name": "中華資安",
+     "close": 294.5,
+     "chg_pct": 9.89,
+     "volume": 8577.7,
+     "avg_vol20": 1188.79,
+     "ma60_dist": 23.99,
+     "rev_yoy": 32.21,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2618",
+     "name": "長榮航",
+     "close": 44.65,
+     "chg_pct": -3.77,
+     "volume": 35299.54,
+     "avg_vol20": 28079.28,
+     "ma60_dist": 3.46,
+     "rev_yoy": 22.63,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2610",
+     "name": "華航",
+     "close": 21.3,
+     "chg_pct": -5.33,
+     "volume": 42260.19,
+     "avg_vol20": 42640.44,
+     "ma60_dist": 2.38,
+     "rev_yoy": 22.36,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    }
+   ]
   }
  ],
  "tracking": {
   "strategies": [
+   {
+    "key": "growth",
+    "label": "成長型",
+    "total_picks": 10,
+    "pick_days": 1,
+    "n5": 0,
+    "avg5": null,
+    "win5": null,
+    "excess5": null,
+    "n20": 0,
+    "avg20": null,
+    "win20": null,
+    "excess20": null
+   },
    {
     "key": "momentum",
     "label": "動能型",
@@ -2779,6 +2936,15 @@
    }
   ],
   "recent": [
+   {
+    "date": "2026-11-20",
+    "strategy": "成長型",
+    "count": 10,
+    "avg5": null,
+    "mkt5": null,
+    "avg20": null,
+    "mkt20": null
+   },
    {
     "date": "2026-11-20",
     "strategy": "動能型",
