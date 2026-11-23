@@ -265,8 +265,11 @@ th.c-close, th.c-chg { min-width: 84px; width: 84px; }
 td.fx-last, th.fx-last { border-right: 1px solid var(--grid); }
 @media (max-width: 600px) {
   th, td { padding: 6px 7px; }
-  th.c-stock { min-width: 96px; width: 96px; }
-  th.c-close, th.c-chg { min-width: 62px; width: 62px; }
+  table { min-width: 100%; width: max-content; }   /* 欄寬依內容，不硬撐到 720px */
+  th.c-stock { min-width: 84px; width: 84px; }
+  th.c-px { min-width: 76px; width: 76px; }
+  td.c-px { line-height: 1.35; }
+  td.c-px .px-chg { font-size: 12px; }
   td.c-stock { white-space: normal; line-height: 1.35; }
   td.c-stock .code { display: block; margin: 0; font-size: 12px; }
   .pager .info { flex-basis: 100%; }
@@ -456,7 +459,18 @@ function sortRows(rows, cols, sort) {
     return (x > y ? 1 : x < y ? -1 : 0) * sort.dir;
   });
 }
-function dataTable(host, { cols, rows, state, fixed = 3, pageSize = PAGE_SIZE, unit = "檔" }) {
+const NARROW = window.matchMedia("(max-width: 600px)");
+/** 手機上把「收盤」「漲跌幅」合併成一欄（上下兩行），固定區從 3 欄縮成 2 欄，讓右側有空間滑動 */
+function narrowCols(cols, fixed) {
+  if (!NARROW.matches || fixed !== 3 || cols[1]?.key !== "close" || cols[2]?.key !== "chg_pct") return [cols, fixed];
+  const [stock, close, chg] = cols;
+  const px = { key: "chg_pct", label: "收盤／漲跌", cls: "c-px", sortVal: r => r.chg_pct,
+    render: r => `<div>${close.render(r)}</div><div class="px-chg">${chg.render(r)}</div>` };
+  return [[stock, px, ...cols.slice(3)], 2];
+}
+function dataTable(host, opts) {
+  const { rows, state, pageSize = PAGE_SIZE, unit = "檔" } = opts;
+  const [cols, fixed] = narrowCols(opts.cols, opts.fixed ?? 3);
   const total = rows.length;
   const pages = Math.max(1, Math.ceil(total / pageSize));
   state.page = Math.min(Math.max(1, state.page || 1), pages);
@@ -483,7 +497,7 @@ function dataTable(host, { cols, rows, state, fixed = 3, pageSize = PAGE_SIZE, u
     pager = `<div class="pager"><span class="info">共 ${total} ${unit}</span></div>`;
   }
   host.innerHTML = `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${pager}`;
-  const redraw = () => dataTable(host, { cols, rows, state, fixed, pageSize, unit });
+  const redraw = () => dataTable(host, opts);
   host.querySelectorAll("th").forEach(th => th.onclick = () => {
     const k = th.dataset.key;
     state.sort = state.sort && state.sort.key === k ? { key: k, dir: -state.sort.dir } : { key: k, dir: -1 };
@@ -1062,6 +1076,8 @@ function applyTheme(t) {
 }
 $("#themeSeg").querySelectorAll("button").forEach(b => b.onclick = () => applyTheme(b.dataset.t));
 applyTheme(document.documentElement.dataset.theme || "auto");
+
+NARROW.addEventListener("change", () => { if (DATA) { renderWatch(); renderScreens(); } });
 
 /* ---------- 可收合區塊：記住每台裝置的選擇；手機預設收起期貨與成效追蹤 ---------- */
 const COL_KEY = "twdash.collapsed";
