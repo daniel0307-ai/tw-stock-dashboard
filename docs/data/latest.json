@@ -1,8 +1,11 @@
 {
- "date": "2026-11-23",
- "generated_at": "2026-11-24 09:11",
- "history_days": 71,
- "warnings": [],
+ "date": "2026-11-24",
+ "generated_at": "2026-11-24 18:29",
+ "history_days": 72,
+ "warnings": [
+  "今日上市融資資料尚未公布",
+  "上櫃融資暫無資料"
+ ],
  "config": {
   "_說明": "所有篩選門檻都在這裡調整，改完存檔、下次排程就會套用。成交量單位一律為「張」。",
   "common": {
@@ -43,63 +46,58 @@
   }
  },
  "market": {
-  "taiex": 36811.89,
-  "taiex_change": 778.6,
-  "taiex_change_pct": 2.16,
-  "value": 1113743193221.0,
-  "inst_foreign": -28947879995.0,
-  "inst_trust": -4154927586.0,
-  "inst_dealer": -19001143162.0,
-  "inst_total": -52103950743.0,
-  "margin_chg": -1419729000.0,
-  "margin_bal": 433807523000.0,
-  "tpex_index": 270.9,
-  "tpex_change": 7.59,
-  "tpex_change_pct": 2.88,
-  "tpex_value": 173575765855.0,
-  "tpex_inst_foreign": 15984530156.77,
-  "tpex_inst_trust": -6792465379.0,
-  "tpex_inst_dealer": 2529855429.6,
-  "tpex_inst_total": 11721920207.37,
-  "tpex_margin_chg": -2855712060.0,
-  "tpex_margin_bal": 177982963240.0,
+  "taiex": 40122.35,
+  "taiex_change": 3310.46,
+  "taiex_change_pct": 8.99,
+  "value": 432559877529.0,
+  "inst_foreign": -50389912492.0,
+  "inst_trust": 8404089127.0,
+  "inst_dealer": -81025340224.0,
+  "inst_total": -123011163589.0,
+  "margin_chg": null,
+  "margin_bal": null,
+  "tpex_index": 293.23,
+  "tpex_change": 22.33,
+  "tpex_change_pct": 8.24,
+  "tpex_value": 49611970051.0,
+  "tpex_inst_foreign": -8212351021.62,
+  "tpex_inst_trust": 966680287.1,
+  "tpex_inst_dealer": 2144591251.94,
+  "tpex_inst_total": -5101079482.58,
+  "tpex_margin_chg": null,
+  "tpex_margin_bal": null,
   "fut_month": 202612.0,
-  "fut_close": 36576.0,
-  "fut_change": 776.0,
-  "fut_change_pct": 2.17,
-  "fut_oi_total": 133842.0,
-  "fut_basis": -235.89,
+  "fut_close": 40324.0,
+  "fut_change": 3665.0,
+  "fut_change_pct": 10.0,
+  "fut_oi_total": 133758.0,
+  "fut_basis": 201.65,
   "mtx_month": 202612.0,
-  "mtx_close": 36581.0,
-  "mtx_change": 781.0,
-  "mtx_change_pct": 2.18,
-  "mtx_oi_total": 31854.0,
-  "mtx_retail_ratio": -11.64,
-  "mtx_retail_net": -3708.0,
-  "mtx_retail_ratio_chg": -9.85,
+  "mtx_close": 40324.0,
+  "mtx_change": 3665.0,
+  "mtx_change_pct": 10.0,
+  "mtx_oi_total": 33055.0,
+  "mtx_retail_ratio": -11.57,
+  "mtx_retail_net": -3826.0,
+  "mtx_retail_ratio_chg": 0.07,
   "tmf_month": 202612.0,
-  "tmf_close": 36582.0,
-  "tmf_change": 782.0,
-  "tmf_change_pct": 2.18,
-  "tmf_oi_total": 81216.0,
-  "tmf_retail_ratio": 40.98,
-  "tmf_retail_net": 33282.0,
-  "tmf_retail_ratio_chg": -12.01,
-  "fut_foreign_oi": -103432.0,
-  "fut_foreign_oi_chg": -5569.0,
-  "fut_trust_oi": 93565.0,
-  "fut_trust_oi_chg": 5966.0,
-  "fut_dealer_oi": 1318.0,
-  "fut_dealer_oi_chg": 1036.0,
-  "pc_ratio": 30.9,
-  "pc_ratio_chg": 0.85
+  "tmf_close": 40324.0,
+  "tmf_change": 3665.0,
+  "tmf_change_pct": 10.0,
+  "tmf_oi_total": 75681.0,
+  "tmf_retail_ratio": 35.49,
+  "tmf_retail_net": 26861.0,
+  "tmf_retail_ratio_chg": -5.49,
+  "fut_foreign_oi": -103182.0,
+  "fut_foreign_oi_chg": 250.0,
+  "fut_trust_oi": 98014.0,
+  "fut_trust_oi_chg": 4449.0,
+  "fut_dealer_oi": -233.0,
+  "fut_dealer_oi_chg": -1551.0,
+  "pc_ratio": 45.96,
+  "pc_ratio_chg": 15.06
  },
  "market_history": [
-  {
-   "date": "2026-08-25",
-   "taiex": 45169.46,
-   "tpex_index": null
-  },
   {
    "date": "2026-08-26",
    "taiex": 45832.62,
@@ -394,6 +392,11 @@
    "date": "2026-11-23",
    "taiex": 36811.89,
    "tpex_index": 270.9
+  },
+  {
+   "date": "2026-11-24",
+   "taiex": 40122.35,
+   "tpex_index": 293.23
   }
  ],
  "watchlist": [
@@ -403,22 +406,22 @@
    "group": "持股",
    "note": "",
    "status": "ok",
-   "close": 2030.0,
-   "chg_pct": 1.5,
-   "volume": 69364.11,
-   "vol_ratio": 1.12,
-   "ma20_dist": -10.11,
-   "ma60_dist": -15.01,
-   "foreign1": -11039.21,
-   "foreign5": -61595.48,
-   "trust1": 1294.25,
-   "trust5": 4683.6,
-   "dealer5": 24037.0,
-   "margin_chg": 1206.0,
-   "margin_bal": 30970.0,
-   "pe": 20.66,
-   "yield": 1.08,
-   "pb": 7.52,
+   "close": 2230.0,
+   "chg_pct": 9.85,
+   "volume": 13213.04,
+   "vol_ratio": 0.2,
+   "ma20_dist": -0.88,
+   "ma60_dist": -6.53,
+   "foreign1": -4098.39,
+   "foreign5": -51087.77,
+   "trust1": 917.83,
+   "trust5": 3326.06,
+   "dealer5": 17600.05,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 22.7,
+   "yield": 0.99,
+   "pb": 8.26,
    "hits": []
   },
   {
@@ -427,19 +430,19 @@
    "group": "持股",
    "note": "",
    "status": "ok",
-   "close": 87.0,
-   "chg_pct": 3.02,
-   "volume": 510651.85,
-   "vol_ratio": 1.06,
-   "ma20_dist": -11.75,
-   "ma60_dist": -17.97,
-   "foreign1": -37983.27,
-   "foreign5": -288659.15,
-   "trust1": 6550.0,
-   "trust5": 24523.0,
-   "dealer5": -837329.04,
-   "margin_chg": 12251.0,
-   "margin_bal": 71654.0,
+   "close": 95.7,
+   "chg_pct": 10.0,
+   "volume": 55100.95,
+   "vol_ratio": 0.11,
+   "ma20_dist": -2.38,
+   "ma60_dist": -9.65,
+   "foreign1": -4135.78,
+   "foreign5": -237210.51,
+   "trust1": 0.0,
+   "trust5": 21358.0,
+   "dealer5": -703793.42,
+   "margin_chg": null,
+   "margin_bal": null,
    "pe": null,
    "yield": null,
    "pb": null,
@@ -451,22 +454,22 @@
    "group": "持股",
    "note": "",
    "status": "ok",
-   "close": 482.0,
-   "chg_pct": 5.47,
-   "volume": 34564.52,
-   "vol_ratio": 1.17,
-   "ma20_dist": -17.89,
-   "ma60_dist": -24.1,
-   "foreign1": -2243.99,
-   "foreign5": -20046.24,
-   "trust1": -76.6,
-   "trust5": 4209.29,
-   "dealer5": 3583.61,
-   "margin_chg": 514.0,
-   "margin_bal": 10122.0,
-   "pe": 27.67,
-   "yield": 1.37,
-   "pb": 5.03,
+   "close": 530.0,
+   "chg_pct": 9.96,
+   "volume": 6701.67,
+   "vol_ratio": 0.21,
+   "ma20_dist": -8.78,
+   "ma60_dist": -16.41,
+   "foreign1": -5076.55,
+   "foreign5": -20161.18,
+   "trust1": -26.77,
+   "trust5": 3925.34,
+   "dealer5": 2372.51,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 30.42,
+   "yield": 1.24,
+   "pb": 5.53,
    "hits": []
   },
   {
@@ -475,22 +478,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 990.0,
-   "chg_pct": 10.0,
-   "volume": 31464.4,
-   "vol_ratio": 1.35,
-   "ma20_dist": -18.32,
-   "ma60_dist": -37.96,
-   "foreign1": 1042.8,
-   "foreign5": -8389.29,
-   "trust1": 173.65,
-   "trust5": -1266.87,
-   "dealer5": 1224.27,
-   "margin_chg": 2101.0,
-   "margin_bal": 11856.0,
-   "pe": 29.73,
-   "yield": 1.17,
-   "pb": 8.08,
+   "close": 1085.0,
+   "chg_pct": 9.6,
+   "volume": 1591.02,
+   "vol_ratio": 0.06,
+   "ma20_dist": -8.88,
+   "ma60_dist": -31.56,
+   "foreign1": -460.21,
+   "foreign5": -9108.34,
+   "trust1": -55.74,
+   "trust5": 947.47,
+   "dealer5": 539.81,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 32.58,
+   "yield": 1.07,
+   "pb": 8.86,
    "hits": []
   },
   {
@@ -499,22 +502,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 670.0,
-   "chg_pct": 6.52,
-   "volume": 21787.67,
-   "vol_ratio": 2.23,
-   "ma20_dist": -31.59,
-   "ma60_dist": -42.09,
-   "foreign1": 1217.61,
-   "foreign5": 7776.1,
-   "trust1": -1107.05,
-   "trust5": -6452.47,
-   "dealer5": 75.8,
-   "margin_chg": -36.0,
-   "margin_bal": 5708.0,
-   "pe": 53.64,
-   "yield": 0.3,
-   "pb": 8.19,
+   "close": 737.0,
+   "chg_pct": 10.0,
+   "volume": 536.48,
+   "vol_ratio": 0.04,
+   "ma20_dist": -22.71,
+   "ma60_dist": -35.91,
+   "foreign1": -223.01,
+   "foreign5": 5983.03,
+   "trust1": -11.05,
+   "trust5": -3979.51,
+   "dealer5": -47.6,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 59.01,
+   "yield": 0.27,
+   "pb": 9.01,
    "hits": []
   },
   {
@@ -523,22 +526,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 310.0,
-   "chg_pct": 4.73,
-   "volume": 73556.58,
-   "vol_ratio": 1.27,
-   "ma20_dist": -25.99,
-   "ma60_dist": -40.22,
-   "foreign1": 79.7,
-   "foreign5": 11054.54,
-   "trust1": -6239.28,
-   "trust5": -15605.69,
-   "dealer5": 2154.23,
-   "margin_chg": 1427.0,
-   "margin_bal": 36118.0,
-   "pe": 17.65,
-   "yield": 1.94,
-   "pb": 3.36,
+   "close": 341.0,
+   "chg_pct": 10.0,
+   "volume": 2649.08,
+   "vol_ratio": 0.04,
+   "ma20_dist": -16.8,
+   "ma60_dist": -33.82,
+   "foreign1": -995.76,
+   "foreign5": 7397.4,
+   "trust1": -16.34,
+   "trust5": -13229.35,
+   "dealer5": 1920.57,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 19.42,
+   "yield": 1.76,
+   "pb": 3.7,
    "hits": []
   },
   {
@@ -547,22 +550,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 467.5,
-   "chg_pct": -0.53,
-   "volume": 54944.66,
-   "vol_ratio": 2.38,
-   "ma20_dist": -35.62,
-   "ma60_dist": -45.31,
-   "foreign1": -3205.22,
-   "foreign5": -9950.44,
-   "trust1": -2054.0,
-   "trust5": -2894.04,
-   "dealer5": -1441.21,
-   "margin_chg": 246.0,
-   "margin_bal": 15189.0,
-   "pe": 50.38,
-   "yield": 0.33,
-   "pb": 5.25,
+   "close": 514.0,
+   "chg_pct": 9.95,
+   "volume": 1383.37,
+   "vol_ratio": 0.04,
+   "ma20_dist": -27.07,
+   "ma60_dist": -39.49,
+   "foreign1": -513.58,
+   "foreign5": -10968.36,
+   "trust1": -161.5,
+   "trust5": -3162.95,
+   "dealer5": -728.64,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 55.39,
+   "yield": 0.3,
+   "pb": 5.77,
    "hits": []
   },
   {
@@ -571,22 +574,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 558.0,
-   "chg_pct": 3.91,
-   "volume": 46555.49,
-   "vol_ratio": 1.72,
-   "ma20_dist": -31.22,
-   "ma60_dist": -44.12,
-   "foreign1": -939.77,
-   "foreign5": -1434.1,
-   "trust1": -2342.64,
-   "trust5": -5759.73,
-   "dealer5": 1481.26,
-   "margin_chg": -19.0,
-   "margin_bal": 33232.0,
-   "pe": 28.88,
-   "yield": 0.35,
-   "pb": 5.16,
+   "close": 613.0,
+   "chg_pct": 9.86,
+   "volume": 1182.33,
+   "vol_ratio": 0.04,
+   "ma20_dist": -22.3,
+   "ma60_dist": -38.11,
+   "foreign1": -77.42,
+   "foreign5": -5917.07,
+   "trust1": -113.35,
+   "trust5": -1072.21,
+   "dealer5": 956.11,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 31.73,
+   "yield": 0.32,
+   "pb": 5.66,
    "hits": []
   },
   {
@@ -595,22 +598,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 193.0,
-   "chg_pct": 2.93,
-   "volume": 30283.82,
-   "vol_ratio": 1.5,
-   "ma20_dist": -33.8,
-   "ma60_dist": -39.78,
-   "foreign1": 3403.19,
-   "foreign5": 9779.3,
-   "trust1": -3332.0,
-   "trust5": -13832.0,
-   "dealer5": -475.67,
-   "margin_chg": -588.0,
-   "margin_bal": 13071.0,
-   "pe": 16.86,
-   "yield": 1.3,
-   "pb": 1.42,
+   "close": 212.0,
+   "chg_pct": 9.84,
+   "volume": 896.4,
+   "vol_ratio": 0.04,
+   "ma20_dist": -25.22,
+   "ma60_dist": -33.66,
+   "foreign1": -50.46,
+   "foreign5": 8091.16,
+   "trust1": -8.0,
+   "trust5": -8167.0,
+   "dealer5": -1183.46,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 18.52,
+   "yield": 1.18,
+   "pb": 1.56,
    "hits": []
   },
   {
@@ -619,22 +622,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 2365.0,
-   "chg_pct": 7.26,
-   "volume": 6995.27,
-   "vol_ratio": 1.74,
-   "ma20_dist": -14.56,
-   "ma60_dist": -25.15,
-   "foreign1": -110.77,
-   "foreign5": -248.24,
-   "trust1": -173.06,
-   "trust5": 364.89,
-   "dealer5": 337.76,
-   "margin_chg": -41.0,
-   "margin_bal": 2658.0,
-   "pe": 26.14,
-   "yield": 0.88,
-   "pb": 13.87,
+   "close": 2600.0,
+   "chg_pct": 9.94,
+   "volume": 328.85,
+   "vol_ratio": 0.07,
+   "ma20_dist": -5.16,
+   "ma60_dist": -17.56,
+   "foreign1": -131.14,
+   "foreign5": 69.6,
+   "trust1": -2.85,
+   "trust5": 726.74,
+   "dealer5": -8.61,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 28.74,
+   "yield": 0.8,
+   "pb": 15.25,
    "hits": []
   },
   {
@@ -643,22 +646,22 @@
    "group": "AI",
    "note": "",
    "status": "ok",
-   "close": 30.25,
-   "chg_pct": 1.0,
-   "volume": 200637.6,
-   "vol_ratio": 1.14,
-   "ma20_dist": -22.78,
-   "ma60_dist": -34.15,
-   "foreign1": -20035.97,
-   "foreign5": 36844.99,
-   "trust1": 14.9,
-   "trust5": -8443.72,
-   "dealer5": -7158.84,
-   "margin_chg": 1618.0,
-   "margin_bal": 225213.0,
-   "pe": 17.49,
-   "yield": 3.31,
-   "pb": 1.03,
+   "close": 33.25,
+   "chg_pct": 9.92,
+   "volume": 17537.47,
+   "vol_ratio": 0.09,
+   "ma20_dist": -13.69,
+   "ma60_dist": -27.27,
+   "foreign1": -93.16,
+   "foreign5": 28915.54,
+   "trust1": -68.51,
+   "trust5": 5675.75,
+   "dealer5": -5673.31,
+   "margin_chg": null,
+   "margin_bal": null,
+   "pe": 19.22,
+   "yield": 3.01,
+   "pb": 1.14,
    "hits": []
   }
  ],
@@ -1907,7 +1910,7 @@
   "6937": "天虹",
   "6944": "兆聯實業",
   "6947": "台鎔科技",
-  "6949": "沛爾生醫*-創",
+  "6949": "沛爾*-創",
   "6951": "青新-創",
   "6952": "大武山",
   "6955": "邦睿生技-創",
@@ -2067,32 +2070,18 @@
    "key": "value",
    "label": "價值型",
    "status": "",
-   "count": 44,
+   "count": 35,
    "rows": [
     {
      "code": "2442",
      "name": "新美齊",
-     "close": 10.6,
-     "chg_pct": 0.95,
-     "volume": 1456.42,
-     "avg_vol20": 1321.96,
-     "pe": 2.26,
-     "yield": 25.85,
-     "pb": 0.53,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2542",
-     "name": "興富發",
-     "close": 36.6,
-     "chg_pct": 1.39,
-     "volume": 6770.31,
-     "avg_vol20": 6865.34,
-     "pe": 7.35,
-     "yield": 10.93,
-     "pb": 1.48,
+     "close": 11.25,
+     "chg_pct": 6.13,
+     "volume": 994.61,
+     "avg_vol20": 1275.01,
+     "pe": 2.4,
+     "yield": 24.36,
+     "pb": 0.56,
      "hits": [
       "價值型"
      ]
@@ -2100,13 +2089,13 @@
     {
      "code": "2614",
      "name": "東森",
-     "close": 11.1,
-     "chg_pct": 0.45,
-     "volume": 1765.07,
-     "avg_vol20": 1930.24,
-     "pe": 7.07,
-     "yield": 10.81,
-     "pb": 0.81,
+     "close": 11.6,
+     "chg_pct": 4.5,
+     "volume": 1423.75,
+     "avg_vol20": 1883.55,
+     "pe": 7.39,
+     "yield": 10.34,
+     "pb": 0.84,
      "hits": [
       "價值型"
      ]
@@ -2114,13 +2103,13 @@
     {
      "code": "4915",
      "name": "致伸",
-     "close": 42.45,
-     "chg_pct": -0.59,
-     "volume": 4193.3,
-     "avg_vol20": 3948.57,
-     "pe": 9.96,
-     "yield": 10.77,
-     "pb": 0.96,
+     "close": 44.35,
+     "chg_pct": 4.48,
+     "volume": 5480.82,
+     "avg_vol20": 3901.16,
+     "pe": 10.41,
+     "yield": 10.3,
+     "pb": 1.0,
      "hits": [
       "價值型"
      ]
@@ -2128,13 +2117,13 @@
     {
      "code": "9938",
      "name": "百和",
-     "close": 30.05,
-     "chg_pct": 0.0,
-     "volume": 1456.04,
-     "avg_vol20": 1513.23,
-     "pe": 11.09,
-     "yield": 9.98,
-     "pb": 0.68,
+     "close": 32.15,
+     "chg_pct": 6.99,
+     "volume": 1642.06,
+     "avg_vol20": 1430.67,
+     "pe": 11.86,
+     "yield": 9.33,
+     "pb": 0.72,
      "hits": [
       "價值型"
      ]
@@ -2142,13 +2131,13 @@
     {
      "code": "2010",
      "name": "春源",
-     "close": 20.5,
-     "chg_pct": 0.24,
-     "volume": 2175.04,
-     "avg_vol20": 1305.0,
-     "pe": 7.65,
-     "yield": 9.76,
-     "pb": 1.02,
+     "close": 21.7,
+     "chg_pct": 5.85,
+     "volume": 1470.85,
+     "avg_vol20": 1239.7,
+     "pe": 8.1,
+     "yield": 9.22,
+     "pb": 1.08,
      "hits": [
       "價值型"
      ]
@@ -2156,27 +2145,13 @@
     {
      "code": "2548",
      "name": "華固",
-     "close": 88.0,
-     "chg_pct": -0.45,
-     "volume": 1781.96,
-     "avg_vol20": 1590.14,
-     "pe": 7.46,
-     "yield": 9.66,
-     "pb": 1.4,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2504",
-     "name": "國產",
-     "close": 29.6,
-     "chg_pct": 0.34,
-     "volume": 2186.86,
-     "avg_vol20": 2600.31,
-     "pe": 9.58,
-     "yield": 8.78,
-     "pb": 1.3,
+     "close": 93.0,
+     "chg_pct": 5.68,
+     "volume": 1605.18,
+     "avg_vol20": 1612.26,
+     "pe": 7.89,
+     "yield": 9.14,
+     "pb": 1.47,
      "hits": [
       "價值型"
      ]
@@ -2184,25 +2159,11 @@
     {
      "code": "5522",
      "name": "遠雄",
-     "close": 63.2,
-     "chg_pct": 0.48,
-     "volume": 1678.19,
-     "avg_vol20": 1352.68,
-     "pe": 6.07,
-     "yield": 8.7,
-     "pb": 1.01,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "9958",
-     "name": "世紀鋼",
-     "close": 52.0,
-     "chg_pct": -3.17,
-     "volume": 5995.29,
-     "avg_vol20": 2066.95,
-     "pe": 8.24,
+     "close": 63.6,
+     "chg_pct": 0.63,
+     "volume": 1923.83,
+     "avg_vol20": 1258.55,
+     "pe": 6.1,
      "yield": 8.65,
      "pb": 1.01,
      "hits": [
@@ -2210,15 +2171,43 @@
      ]
     },
     {
+     "code": "2504",
+     "name": "國產",
+     "close": 31.35,
+     "chg_pct": 5.91,
+     "volume": 2950.82,
+     "avg_vol20": 2055.78,
+     "pe": 10.15,
+     "yield": 8.29,
+     "pb": 1.37,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "9958",
+     "name": "世紀鋼",
+     "close": 57.2,
+     "chg_pct": 10.0,
+     "volume": 2585.13,
+     "avg_vol20": 2151.57,
+     "pe": 9.06,
+     "yield": 7.87,
+     "pb": 1.11,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
      "code": "2385",
      "name": "群光",
-     "close": 90.1,
-     "chg_pct": 6.12,
-     "volume": 3623.62,
-     "avg_vol20": 3527.24,
-     "pe": 11.08,
-     "yield": 7.99,
-     "pb": 1.42,
+     "close": 93.0,
+     "chg_pct": 3.22,
+     "volume": 4744.93,
+     "avg_vol20": 3366.82,
+     "pe": 11.44,
+     "yield": 7.74,
+     "pb": 1.46,
      "hits": [
       "價值型"
      ]
@@ -2226,41 +2215,13 @@
     {
      "code": "2393",
      "name": "億光",
-     "close": 57.7,
-     "chg_pct": 2.85,
-     "volume": 1577.23,
-     "avg_vol20": 1582.08,
-     "pe": 11.75,
-     "yield": 7.8,
-     "pb": 1.28,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "1608",
-     "name": "華榮",
-     "close": 25.9,
-     "chg_pct": 3.19,
-     "volume": 1928.55,
-     "avg_vol20": 2167.37,
-     "pe": 3.69,
-     "yield": 7.72,
-     "pb": 0.99,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "6412",
-     "name": "群電",
-     "close": 48.1,
-     "chg_pct": -0.31,
-     "volume": 707.59,
-     "avg_vol20": 1066.71,
-     "pe": 10.5,
-     "yield": 7.69,
-     "pb": 1.23,
+     "close": 60.1,
+     "chg_pct": 4.16,
+     "volume": 1858.86,
+     "avg_vol20": 1622.74,
+     "pe": 12.24,
+     "yield": 7.49,
+     "pb": 1.34,
      "hits": [
       "價值型"
      ]
@@ -2268,55 +2229,27 @@
     {
      "code": "1319",
      "name": "東陽",
-     "close": 65.5,
-     "chg_pct": 2.83,
-     "volume": 1525.29,
-     "avg_vol20": 2075.56,
-     "pe": 10.19,
-     "yield": 7.63,
-     "pb": 1.39,
+     "close": 68.1,
+     "chg_pct": 3.97,
+     "volume": 2606.05,
+     "avg_vol20": 2131.38,
+     "pe": 10.59,
+     "yield": 7.34,
+     "pb": 1.45,
      "hits": [
       "價值型"
      ]
     },
     {
-     "code": "6005",
-     "name": "群益證",
-     "close": 22.85,
-     "chg_pct": 3.16,
-     "volume": 8474.84,
-     "avg_vol20": 7204.86,
-     "pe": 4.88,
-     "yield": 7.48,
-     "pb": 1.03,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "3706",
-     "name": "神達",
-     "close": 53.6,
-     "chg_pct": 1.13,
-     "volume": 12040.37,
-     "avg_vol20": 9315.71,
-     "pe": 10.51,
-     "yield": 7.46,
-     "pb": 1.0,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "4532",
-     "name": "瑞智",
-     "close": 20.15,
-     "chg_pct": 0.0,
-     "volume": 1049.17,
-     "avg_vol20": 1312.98,
-     "pe": 11.99,
-     "yield": 7.44,
-     "pb": 0.91,
+     "code": "1608",
+     "name": "華榮",
+     "close": 27.95,
+     "chg_pct": 7.92,
+     "volume": 1694.7,
+     "avg_vol20": 2013.98,
+     "pe": 3.98,
+     "yield": 7.16,
+     "pb": 1.06,
      "hits": [
       "價值型"
      ]
@@ -2324,13 +2257,41 @@
     {
      "code": "2204",
      "name": "中華",
-     "close": 48.45,
-     "chg_pct": 3.19,
-     "volume": 1759.1,
-     "avg_vol20": 1303.38,
-     "pe": 8.3,
-     "yield": 7.43,
-     "pb": 0.68,
+     "close": 50.3,
+     "chg_pct": 3.82,
+     "volume": 1308.44,
+     "avg_vol20": 1173.96,
+     "pe": 8.61,
+     "yield": 7.16,
+     "pb": 0.71,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "4532",
+     "name": "瑞智",
+     "close": 21.45,
+     "chg_pct": 6.45,
+     "volume": 833.14,
+     "avg_vol20": 1204.09,
+     "pe": 12.77,
+     "yield": 6.99,
+     "pb": 0.96,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "3706",
+     "name": "神達",
+     "close": 58.4,
+     "chg_pct": 8.96,
+     "volume": 14866.94,
+     "avg_vol20": 9764.77,
+     "pe": 11.45,
+     "yield": 6.85,
+     "pb": 1.08,
      "hits": [
       "價值型"
      ]
@@ -2338,13 +2299,27 @@
     {
      "code": "1102",
      "name": "亞泥",
-     "close": 32.2,
-     "chg_pct": -0.46,
-     "volume": 10335.43,
-     "avg_vol20": 7715.68,
-     "pe": 9.97,
-     "yield": 7.14,
-     "pb": 0.61,
+     "close": 33.65,
+     "chg_pct": 4.5,
+     "volume": 7161.9,
+     "avg_vol20": 7753.83,
+     "pe": 10.42,
+     "yield": 6.84,
+     "pb": 0.64,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "6005",
+     "name": "群益證",
+     "close": 25.1,
+     "chg_pct": 9.85,
+     "volume": 10397.5,
+     "avg_vol20": 7035.98,
+     "pe": 5.36,
+     "yield": 6.81,
+     "pb": 1.13,
      "hits": [
       "價值型"
      ]
@@ -2352,27 +2327,13 @@
     {
      "code": "9941",
      "name": "裕融",
-     "close": 67.1,
-     "chg_pct": -1.32,
-     "volume": 1722.39,
-     "avg_vol20": 1083.64,
-     "pe": 9.78,
-     "yield": 6.83,
-     "pb": 1.1,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2603",
-     "name": "長榮",
-     "close": 234.5,
-     "chg_pct": 0.64,
-     "volume": 24216.75,
-     "avg_vol20": 11908.85,
-     "pe": 6.39,
-     "yield": 6.82,
-     "pb": 0.83,
+     "close": 71.2,
+     "chg_pct": 6.11,
+     "volume": 1965.4,
+     "avg_vol20": 1148.21,
+     "pe": 10.38,
+     "yield": 6.43,
+     "pb": 1.17,
      "hits": [
       "價值型"
      ]
@@ -2380,13 +2341,42 @@
     {
      "code": "2812",
      "name": "台中銀",
-     "close": 15.6,
-     "chg_pct": -0.95,
-     "volume": 15875.06,
-     "avg_vol20": 15862.89,
-     "pe": 10.54,
-     "yield": 6.79,
-     "pb": 1.04,
+     "close": 16.65,
+     "chg_pct": 6.73,
+     "volume": 11320.04,
+     "avg_vol20": 16046.79,
+     "pe": 11.25,
+     "yield": 6.37,
+     "pb": 1.12,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "2603",
+     "name": "長榮",
+     "close": 257.0,
+     "chg_pct": 9.59,
+     "volume": 44303.48,
+     "avg_vol20": 13581.87,
+     "pe": 7.0,
+     "yield": 6.23,
+     "pb": 0.91,
+     "hits": [
+      "價值型",
+      "成長型"
+     ]
+    },
+    {
+     "code": "2903",
+     "name": "遠百",
+     "close": 20.65,
+     "chg_pct": 5.63,
+     "volume": 2705.65,
+     "avg_vol20": 1665.42,
+     "pe": 14.65,
+     "yield": 6.05,
+     "pb": 0.95,
      "hits": [
       "價值型"
      ]
@@ -2394,27 +2384,13 @@
     {
      "code": "2543",
      "name": "皇昌",
-     "close": 23.4,
-     "chg_pct": 0.65,
-     "volume": 2433.44,
-     "avg_vol20": 2136.42,
-     "pe": 7.62,
-     "yield": 6.54,
-     "pb": 1.22,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2903",
-     "name": "遠百",
-     "close": 19.55,
-     "chg_pct": -0.26,
-     "volume": 2456.43,
-     "avg_vol20": 1586.37,
-     "pe": 13.87,
-     "yield": 6.39,
-     "pb": 0.9,
+     "close": 25.3,
+     "chg_pct": 8.12,
+     "volume": 1238.63,
+     "avg_vol20": 2147.17,
+     "pe": 8.24,
+     "yield": 6.05,
+     "pb": 1.32,
      "hits": [
       "價值型"
      ]
@@ -2422,13 +2398,13 @@
     {
      "code": "2834",
      "name": "臺企銀",
-     "close": 16.05,
-     "chg_pct": -0.93,
-     "volume": 47096.26,
-     "avg_vol20": 28955.53,
-     "pe": 11.98,
-     "yield": 6.23,
-     "pb": 1.05,
+     "close": 16.8,
+     "chg_pct": 4.67,
+     "volume": 37456.12,
+     "avg_vol20": 29803.93,
+     "pe": 12.54,
+     "yield": 5.95,
+     "pb": 1.1,
      "hits": [
       "價值型"
      ]
@@ -2436,13 +2412,13 @@
     {
      "code": "5871",
      "name": "中租-KY",
-     "close": 96.6,
-     "chg_pct": 2.77,
-     "volume": 17500.69,
-     "avg_vol20": 9235.73,
-     "pe": 8.87,
-     "yield": 6.21,
-     "pb": 0.95,
+     "close": 103.5,
+     "chg_pct": 7.14,
+     "volume": 20463.38,
+     "avg_vol20": 9834.18,
+     "pe": 9.5,
+     "yield": 5.8,
+     "pb": 1.02,
      "hits": [
       "價值型"
      ]
@@ -2450,13 +2426,13 @@
     {
      "code": "2501",
      "name": "國建",
-     "close": 20.05,
-     "chg_pct": -0.25,
-     "volume": 2497.34,
-     "avg_vol20": 2598.77,
-     "pe": 5.26,
-     "yield": 5.99,
-     "pb": 0.67,
+     "close": 21.25,
+     "chg_pct": 5.99,
+     "volume": 2168.54,
+     "avg_vol20": 2476.45,
+     "pe": 5.58,
+     "yield": 5.65,
+     "pb": 0.71,
      "hits": [
       "價值型"
      ]
@@ -2464,13 +2440,13 @@
     {
      "code": "2347",
      "name": "聯強",
-     "close": 70.6,
-     "chg_pct": 1.58,
-     "volume": 5040.41,
-     "avg_vol20": 4646.84,
-     "pe": 8.11,
-     "yield": 5.95,
-     "pb": 1.27,
+     "close": 74.9,
+     "chg_pct": 6.09,
+     "volume": 6431.69,
+     "avg_vol20": 4605.28,
+     "pe": 8.61,
+     "yield": 5.61,
+     "pb": 1.35,
      "hits": [
       "價值型"
      ]
@@ -2478,41 +2454,13 @@
     {
      "code": "2820",
      "name": "華票",
-     "close": 15.5,
-     "chg_pct": -1.27,
-     "volume": 7153.13,
-     "avg_vol20": 3695.56,
-     "pe": 8.71,
-     "yield": 5.81,
-     "pb": 0.77,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "3028",
-     "name": "增你強",
-     "close": 51.7,
-     "chg_pct": 2.17,
-     "volume": 2681.65,
-     "avg_vol20": 2072.28,
-     "pe": 6.32,
-     "yield": 5.8,
-     "pb": 1.46,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2838",
-     "name": "聯邦銀",
-     "close": 18.35,
-     "chg_pct": -0.54,
-     "volume": 4011.99,
-     "avg_vol20": 2197.57,
-     "pe": 13.01,
-     "yield": 5.78,
-     "pb": 1.0,
+     "close": 16.1,
+     "chg_pct": 3.87,
+     "volume": 4773.31,
+     "avg_vol20": 3722.3,
+     "pe": 9.04,
+     "yield": 5.59,
+     "pb": 0.8,
      "hits": [
       "價值型"
      ]
@@ -2520,13 +2468,27 @@
     {
      "code": "4306",
      "name": "炎洲",
-     "close": 12.15,
-     "chg_pct": -0.41,
-     "volume": 1316.42,
-     "avg_vol20": 1255.96,
-     "pe": 13.65,
-     "yield": 5.76,
-     "pb": 0.56,
+     "close": 12.75,
+     "chg_pct": 4.94,
+     "volume": 773.64,
+     "avg_vol20": 1041.41,
+     "pe": 14.33,
+     "yield": 5.49,
+     "pb": 0.59,
+     "hits": [
+      "價值型"
+     ]
+    },
+    {
+     "code": "2838",
+     "name": "聯邦銀",
+     "close": 19.5,
+     "chg_pct": 6.27,
+     "volume": 2053.98,
+     "avg_vol20": 2210.28,
+     "pe": 13.83,
+     "yield": 5.44,
+     "pb": 1.06,
      "hits": [
       "價值型"
      ]
@@ -2534,13 +2496,13 @@
     {
      "code": "3033",
      "name": "威健",
-     "close": 34.15,
-     "chg_pct": 3.48,
-     "volume": 3199.13,
-     "avg_vol20": 3254.93,
-     "pe": 5.9,
-     "yield": 5.62,
-     "pb": 1.3,
+     "close": 36.65,
+     "chg_pct": 7.32,
+     "volume": 4734.98,
+     "avg_vol20": 3399.79,
+     "pe": 6.33,
+     "yield": 5.24,
+     "pb": 1.39,
      "hits": [
       "價值型"
      ]
@@ -2548,13 +2510,13 @@
     {
      "code": "2851",
      "name": "中再保",
-     "close": 39.8,
-     "chg_pct": -0.87,
-     "volume": 2526.31,
-     "avg_vol20": 2789.16,
-     "pe": 3.82,
-     "yield": 5.53,
-     "pb": 1.19,
+     "close": 42.75,
+     "chg_pct": 7.41,
+     "volume": 2300.94,
+     "avg_vol20": 2754.88,
+     "pe": 4.1,
+     "yield": 5.15,
+     "pb": 1.28,
      "hits": [
       "價值型"
      ]
@@ -2562,13 +2524,13 @@
     {
      "code": "9904",
      "name": "寶成",
-     "close": 23.95,
-     "chg_pct": -1.03,
-     "volume": 27431.69,
-     "avg_vol20": 19494.19,
-     "pe": 5.07,
-     "yield": 5.43,
-     "pb": 0.34,
+     "close": 25.5,
+     "chg_pct": 6.47,
+     "volume": 23553.11,
+     "avg_vol20": 19957.97,
+     "pe": 5.4,
+     "yield": 5.1,
+     "pb": 0.36,
      "hits": [
       "價值型"
      ]
@@ -2576,41 +2538,13 @@
     {
      "code": "2845",
      "name": "遠東銀",
-     "close": 11.9,
-     "chg_pct": 0.42,
-     "volume": 12542.21,
-     "avg_vol20": 7845.73,
-     "pe": 11.78,
-     "yield": 5.29,
-     "pb": 0.81,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "2520",
-     "name": "冠德",
-     "close": 31.0,
-     "chg_pct": 0.65,
-     "volume": 946.62,
-     "avg_vol20": 1055.18,
-     "pe": 8.99,
-     "yield": 5.23,
-     "pb": 0.75,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "3703",
-     "name": "欣陸",
-     "close": 20.2,
-     "chg_pct": -2.18,
-     "volume": 2035.79,
-     "avg_vol20": 2382.14,
-     "pe": 7.35,
-     "yield": 5.2,
-     "pb": 0.59,
+     "close": 12.4,
+     "chg_pct": 4.2,
+     "volume": 8817.83,
+     "avg_vol20": 7901.28,
+     "pe": 12.28,
+     "yield": 5.08,
+     "pb": 0.84,
      "hits": [
       "價值型"
      ]
@@ -2618,69 +2552,13 @@
     {
      "code": "2897",
      "name": "王道銀行",
-     "close": 10.0,
-     "chg_pct": -0.5,
-     "volume": 6796.03,
-     "avg_vol20": 4555.58,
-     "pe": 11.63,
-     "yield": 5.2,
-     "pb": 0.68,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "1229",
-     "name": "聯華",
-     "close": 38.55,
-     "chg_pct": -0.26,
-     "volume": 2753.89,
-     "avg_vol20": 2387.32,
-     "pe": 11.93,
-     "yield": 5.19,
-     "pb": 1.06,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "8110",
-     "name": "華東",
-     "close": 28.85,
-     "chg_pct": 5.1,
-     "volume": 3657.86,
-     "avg_vol20": 3003.62,
-     "pe": 7.65,
-     "yield": 5.16,
-     "pb": 0.95,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "8112",
-     "name": "至上",
-     "close": 74.7,
-     "chg_pct": 7.33,
-     "volume": 6290.2,
-     "avg_vol20": 5569.61,
-     "pe": 4.0,
-     "yield": 5.09,
-     "pb": 1.49,
-     "hits": [
-      "價值型"
-     ]
-    },
-    {
-     "code": "4938",
-     "name": "和碩",
-     "close": 79.1,
-     "chg_pct": 1.28,
-     "volume": 11125.53,
-     "avg_vol20": 11634.95,
-     "pe": 13.83,
-     "yield": 5.07,
-     "pb": 0.96,
+     "close": 10.35,
+     "chg_pct": 3.5,
+     "volume": 7452.48,
+     "avg_vol20": 4792.24,
+     "pe": 12.03,
+     "yield": 5.02,
+     "pb": 0.71,
      "hits": [
       "價值型"
      ]
@@ -2691,21 +2569,90 @@
    "key": "momentum",
    "label": "動能型",
    "status": "",
-   "count": 1,
+   "count": 5,
    "rows": [
+    {
+     "code": "2474",
+     "name": "可成",
+     "close": 206.0,
+     "chg_pct": 6.74,
+     "volume": 10631.62,
+     "avg_vol20": 2835.88,
+     "ma20_dist": 6.85,
+     "vol_ratio": 2.74,
+     "foreign_streak": 0.0,
+     "trust_streak": 6.0,
+     "foreign5": -4496.16,
+     "trust5": 3769.47,
+     "hits": [
+      "動能型"
+     ]
+    },
+    {
+     "code": "2610",
+     "name": "華航",
+     "close": 22.5,
+     "chg_pct": 6.64,
+     "volume": 101676.01,
+     "avg_vol20": 47902.31,
+     "ma20_dist": 3.33,
+     "vol_ratio": 2.56,
+     "foreign_streak": 13.0,
+     "trust_streak": 1.0,
+     "foreign5": 36775.46,
+     "trust5": 8205.0,
+     "hits": [
+      "動能型",
+      "成長型"
+     ]
+    },
     {
      "code": "2412",
      "name": "中華電",
      "close": 164.5,
-     "chg_pct": 1.23,
-     "volume": 36639.67,
-     "avg_vol20": 18035.51,
-     "ma20_dist": 1.87,
-     "vol_ratio": 1.54,
+     "chg_pct": 0.0,
+     "volume": 62074.03,
+     "avg_vol20": 20473.61,
+     "ma20_dist": 1.67,
+     "vol_ratio": 2.21,
      "foreign_streak": 0.0,
-     "trust_streak": 4.0,
-     "foreign5": -1202.43,
-     "trust5": 16072.39,
+     "trust_streak": 5.0,
+     "foreign5": -8297.0,
+     "trust5": 32829.05,
+     "hits": [
+      "動能型"
+     ]
+    },
+    {
+     "code": "1210",
+     "name": "大成",
+     "close": 52.0,
+     "chg_pct": 5.05,
+     "volume": 2814.99,
+     "avg_vol20": 1751.43,
+     "ma20_dist": 2.39,
+     "vol_ratio": 1.91,
+     "foreign_streak": 1.0,
+     "trust_streak": 6.0,
+     "foreign5": 1595.07,
+     "trust5": 725.0,
+     "hits": [
+      "動能型"
+     ]
+    },
+    {
+     "code": "1229",
+     "name": "聯華",
+     "close": 41.05,
+     "chg_pct": 6.49,
+     "volume": 5693.19,
+     "avg_vol20": 2507.61,
+     "ma20_dist": 5.07,
+     "vol_ratio": 1.71,
+     "foreign_streak": 4.0,
+     "trust_streak": 6.0,
+     "foreign5": 7888.01,
+     "trust5": 79.0,
      "hits": [
       "動能型"
      ]
@@ -2716,17 +2663,102 @@
    "key": "growth",
    "label": "成長型",
    "status": "",
-   "count": 8,
+   "count": 16,
    "rows": [
+    {
+     "code": "3661",
+     "name": "世芯-KY",
+     "close": 3915.0,
+     "chg_pct": 9.97,
+     "volume": 204.06,
+     "avg_vol20": 3144.92,
+     "ma60_dist": 4.99,
+     "rev_yoy": 515.81,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "3715",
+     "name": "定穎投控",
+     "close": 136.5,
+     "chg_pct": 9.64,
+     "volume": 802.83,
+     "avg_vol20": 11839.88,
+     "ma60_dist": 8.21,
+     "rev_yoy": 121.47,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2603",
+     "name": "長榮",
+     "close": 257.0,
+     "chg_pct": 9.59,
+     "volume": 44303.48,
+     "avg_vol20": 13581.87,
+     "ma60_dist": 4.09,
+     "rev_yoy": 96.13,
+     "rev_ym": "2026-10",
+     "hits": [
+      "價值型",
+      "成長型"
+     ]
+    },
+    {
+     "code": "3701",
+     "name": "大眾控",
+     "close": 52.8,
+     "chg_pct": 10.0,
+     "volume": 516.97,
+     "avg_vol20": 9362.88,
+     "ma60_dist": 3.06,
+     "rev_yoy": 93.95,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
     {
      "code": "6108",
      "name": "競國",
-     "close": 31.05,
-     "chg_pct": -9.87,
-     "volume": 3259.34,
-     "avg_vol20": 6029.62,
-     "ma60_dist": 10.39,
+     "close": 34.15,
+     "chg_pct": 9.98,
+     "volume": 1396.4,
+     "avg_vol20": 5786.58,
+     "ma60_dist": 20.6,
      "rev_yoy": 86.67,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "1802",
+     "name": "台玻",
+     "close": 63.9,
+     "chg_pct": 9.98,
+     "volume": 7508.23,
+     "avg_vol20": 176405.81,
+     "ma60_dist": 1.7,
+     "rev_yoy": 56.49,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "8213",
+     "name": "志超",
+     "close": 37.0,
+     "chg_pct": 6.78,
+     "volume": 9443.14,
+     "avg_vol20": 5806.82,
+     "ma60_dist": 1.85,
+     "rev_yoy": 55.17,
      "rev_ym": "2026-10",
      "hits": [
       "成長型"
@@ -2735,11 +2767,11 @@
     {
      "code": "2466",
      "name": "冠西電",
-     "close": 425.5,
-     "chg_pct": 9.95,
-     "volume": 361.98,
-     "avg_vol20": 2214.35,
-     "ma60_dist": 96.7,
+     "close": 383.0,
+     "chg_pct": -9.99,
+     "volume": 9399.67,
+     "avg_vol20": 2634.19,
+     "ma60_dist": 73.32,
      "rev_yoy": 54.17,
      "rev_ym": "2026-10",
      "hits": [
@@ -2749,12 +2781,26 @@
     {
      "code": "9933",
      "name": "中鼎",
-     "close": 51.9,
-     "chg_pct": 0.78,
-     "volume": 18904.25,
-     "avg_vol20": 17482.55,
-     "ma60_dist": 16.64,
+     "close": 54.0,
+     "chg_pct": 4.05,
+     "volume": 48020.74,
+     "avg_vol20": 19449.3,
+     "ma60_dist": 20.83,
      "rev_yoy": 53.86,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "3703",
+     "name": "欣陸",
+     "close": 21.55,
+     "chg_pct": 6.68,
+     "volume": 1227.53,
+     "avg_vol20": 2085.32,
+     "ma60_dist": 4.98,
+     "rev_yoy": 49.59,
      "rev_ym": "2026-10",
      "hits": [
       "成長型"
@@ -2763,11 +2809,11 @@
     {
      "code": "1416",
      "name": "廣豐",
-     "close": 14.6,
-     "chg_pct": 0.0,
-     "volume": 4259.65,
-     "avg_vol20": 10793.5,
-     "ma60_dist": 10.21,
+     "close": 14.7,
+     "chg_pct": 0.68,
+     "volume": 10707.49,
+     "avg_vol20": 11297.77,
+     "ma60_dist": 10.57,
      "rev_yoy": 45.46,
      "rev_ym": "2026-10",
      "hits": [
@@ -2777,11 +2823,11 @@
     {
      "code": "2355",
      "name": "敬鵬",
-     "close": 53.6,
-     "chg_pct": 9.95,
-     "volume": 30026.43,
-     "avg_vol20": 27640.78,
-     "ma60_dist": 12.86,
+     "close": 58.9,
+     "chg_pct": 9.89,
+     "volume": 1994.98,
+     "avg_vol20": 27286.38,
+     "ma60_dist": 23.28,
      "rev_yoy": 33.02,
      "rev_ym": "2026-10",
      "hits": [
@@ -2791,12 +2837,26 @@
     {
      "code": "7765",
      "name": "中華資安",
-     "close": 270.0,
-     "chg_pct": -8.32,
-     "volume": 4655.82,
-     "avg_vol20": 1413.3,
-     "ma60_dist": 13.31,
+     "close": 283.0,
+     "chg_pct": 4.81,
+     "volume": 4900.07,
+     "avg_vol20": 1642.34,
+     "ma60_dist": 18.28,
      "rev_yoy": 32.21,
+     "rev_ym": "2026-10",
+     "hits": [
+      "成長型"
+     ]
+    },
+    {
+     "code": "2453",
+     "name": "凌群",
+     "close": 57.6,
+     "chg_pct": 9.71,
+     "volume": 1526.94,
+     "avg_vol20": 2047.55,
+     "ma60_dist": 7.02,
+     "rev_yoy": 30.78,
      "rev_ym": "2026-10",
      "hits": [
       "成長型"
@@ -2805,11 +2865,11 @@
     {
      "code": "2618",
      "name": "長榮航",
-     "close": 44.2,
-     "chg_pct": -1.01,
-     "volume": 27905.39,
-     "avg_vol20": 28842.62,
-     "ma60_dist": 2.35,
+     "close": 48.6,
+     "chg_pct": 9.95,
+     "volume": 88578.91,
+     "avg_vol20": 32433.15,
+     "ma60_dist": 12.27,
      "rev_yoy": 22.63,
      "rev_ym": "2026-10",
      "hits": [
@@ -2819,14 +2879,15 @@
     {
      "code": "2610",
      "name": "華航",
-     "close": 21.1,
-     "chg_pct": -0.94,
-     "volume": 34271.16,
-     "avg_vol20": 43678.39,
-     "ma60_dist": 1.37,
+     "close": 22.5,
+     "chg_pct": 6.64,
+     "volume": 101676.01,
+     "avg_vol20": 47902.31,
+     "ma60_dist": 7.92,
      "rev_yoy": 22.36,
      "rev_ym": "2026-10",
      "hits": [
+      "動能型",
       "成長型"
      ]
     }
@@ -2838,8 +2899,8 @@
    {
     "key": "growth",
     "label": "成長型",
-    "total_picks": 18,
-    "pick_days": 2,
+    "total_picks": 34,
+    "pick_days": 3,
     "n5": 0,
     "avg5": null,
     "win5": null,
@@ -2852,8 +2913,8 @@
    {
     "key": "momentum",
     "label": "動能型",
-    "total_picks": 2,
-    "pick_days": 2,
+    "total_picks": 7,
+    "pick_days": 3,
     "n5": 0,
     "avg5": null,
     "win5": null,
@@ -2866,8 +2927,8 @@
    {
     "key": "value",
     "label": "價值型",
-    "total_picks": 90,
-    "pick_days": 2,
+    "total_picks": 125,
+    "pick_days": 3,
     "n5": 0,
     "avg5": null,
     "win5": null,
@@ -2879,6 +2940,33 @@
    }
   ],
   "recent": [
+   {
+    "date": "2026-11-24",
+    "strategy": "成長型",
+    "count": 16,
+    "avg5": null,
+    "mkt5": null,
+    "avg20": null,
+    "mkt20": null
+   },
+   {
+    "date": "2026-11-24",
+    "strategy": "動能型",
+    "count": 5,
+    "avg5": null,
+    "mkt5": null,
+    "avg20": null,
+    "mkt20": null
+   },
+   {
+    "date": "2026-11-24",
+    "strategy": "價值型",
+    "count": 35,
+    "avg5": null,
+    "mkt5": null,
+    "avg20": null,
+    "mkt20": null
+   },
    {
     "date": "2026-11-23",
     "strategy": "成長型",
