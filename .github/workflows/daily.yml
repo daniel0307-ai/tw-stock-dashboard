@@ -2,9 +2,10 @@ name: 每日台股篩選
 
 on:
   schedule:
-    # GitHub 排程用 UTC。09:30 UTC = 台北 17:30；11:30 UTC = 台北 19:30（補跑，若 17:30 時資料尚未齊全）
-    - cron: "30 9 * * 1-5"
-    - cron: "30 11 * * 1-5"
+    # GitHub 排程用 UTC。09:47 UTC = 台北 17:47；12:26 UTC = 台北 20:26（補跑，若 17:47 時資料尚未齊全）
+    # 分鐘刻意避開 :00／:30，減少 GitHub 尖峰延遲
+    - cron: "47 9 * * 1-5"
+    - cron: "26 12 * * 1-5"
   workflow_dispatch:
     inputs:
       date:
