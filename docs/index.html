@@ -255,6 +255,11 @@ header .actions { display: flex; gap: 8px; align-items: center; }
 .pager button { min-width: 32px; padding: 4px 8px; }
 .pager button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+/* 漲停／跌停底色（文字仍保留 ▲▼） */
+.lim { display: inline-block; padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+.lim > span { color: #fff; }
+.lim-up { background: #c62828; }
+.lim-down { background: #1b7f3b; }
 /* 固定左側欄（股票、收盤、漲跌幅） */
 td.fx, th.fx { position: sticky; z-index: 1; background: var(--surface-1); }
 th.fx { z-index: 3; }
@@ -435,6 +440,31 @@ function signedInt(v, suffix = "") {
   v = Math.round(v);
   const cls = v > 0 ? "up" : v < 0 ? "down" : "flat";
   return `<span class="${cls}">${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(Math.round(v)).toLocaleString("zh-TW")}${suffix}</span>`;
+}
+/** 台股升降單位（ETF 代號 00 開頭另計） */
+function tickOf(p, etf) {
+  if (etf) return p < 50 ? 0.01 : 0.05;
+  return p < 10 ? 0.01 : p < 50 ? 0.05 : p < 100 ? 0.1 : p < 500 ? 0.5 : p < 1000 ? 1 : 5;
+}
+/** 依收盤與漲跌幅反推昨收，算出漲跌停價；回傳 "up" / "down" / "" */
+function limitState(r) {
+  const c = r.close, pct = r.chg_pct;
+  if (c == null || pct == null || Math.abs(pct) < 9) return "";
+  const etf = /^00/.test(String(r.code || ""));
+  const prev = c / (1 + pct / 100);
+  if (pct > 0) {
+    const raw = prev * 1.1, t = tickOf(raw, etf);
+    const lim = Math.floor(raw / t + 1e-6) * t;
+    return c >= lim - t / 2 ? "up" : "";
+  }
+  const raw = prev * 0.9, t = tickOf(raw, etf);
+  const lim = Math.ceil(raw / t - 1e-6) * t;
+  return c <= lim + t / 2 ? "down" : "";
+}
+/** 漲跌幅儲存格：漲停／跌停加底色 */
+function chgCell(r) {
+  const st = limitState(r), html = signed(r.chg_pct, 2, "%");
+  return st ? `<span class="lim lim-${st}" title="${st === "up" ? "漲停" : "跌停"}">${html}</span>` : html;
 }
 function hitBadges(h) {
   if (!h || !h.length) return '<span class="muted">-</span>';
@@ -631,7 +661,7 @@ const W_COL = {
   stock: { key: "code", label: "股票", align: "l", cls: "c-stock", render: r => stockCell(r)
     + (r.note ? `<div class="note">${esc(r.note)}</div>` : "") },
   close: { key: "close", label: "收盤", cls: "c-close", render: r => okRow(r) ? fmt(r.close) : `<span class="note" title="${esc(r.status)}">無資料</span>` },
-  chg: { key: "chg_pct", label: "漲跌幅", cls: "c-chg", render: r => signed(r.chg_pct, 2, "%") },
+  chg: { key: "chg_pct", label: "漲跌幅", cls: "c-chg", render: chgCell },
   vol: { key: "volume", label: "成交量(張)", render: r => int(r.volume) },
   vr: { key: "vol_ratio", label: "量比", render: r => r.vol_ratio == null ? "-" : fmt(r.vol_ratio) + "×" },
   ma20: { key: "ma20_dist", label: "距 20 日線", render: r => signed(r.ma20_dist, 1, "%") },
@@ -696,7 +726,7 @@ function ruleText(key, cfg) {
 const base = [
   { key: "code", label: "股票", align: "l", cls: "c-stock", render: stockCell },
   { key: "close", label: "收盤", cls: "c-close", render: r => fmt(r.close) },
-  { key: "chg_pct", label: "漲跌幅", cls: "c-chg", render: r => signed(r.chg_pct, 2, "%") },
+  { key: "chg_pct", label: "漲跌幅", cls: "c-chg", render: chgCell },
   { key: "volume", label: "成交量(張)", render: r => int(r.volume) },
 ];
 const hitCol = { key: "hits", label: "命中策略", align: "l", sortVal: hitSort, render: r => hitBadges(r.hits) };
